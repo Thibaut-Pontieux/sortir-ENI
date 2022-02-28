@@ -6,7 +6,11 @@ use App\Repository\ParticipantsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+/**
+ * @UniqueEntity(fields={"pseudo"}, message="There is already an account with this pseudo")
+ */
 /**
  * @ORM\Entity(repositoryClass=ParticipantsRepository::class)
  */
@@ -20,7 +24,7 @@ class Participants
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=30, unique=true)
      */
     private $pseudo;
 
