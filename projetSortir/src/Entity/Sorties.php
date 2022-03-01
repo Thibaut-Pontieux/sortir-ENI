@@ -129,14 +129,14 @@ class Sorties
         return $this;
     }
 
-    public function getDateCloture(): ?\DateTimeInterface
+    public function getDateClotureInscription(): ?\DateTimeInterface
     {
-        return $this->date_cloture;
+        return $this->date_cloture_inscription;
     }
 
-    public function setDateCloture(\DateTimeInterface $date_cloture): self
+    public function setDateClotureInscription(\DateTimeInterface $date_cloture_inscription): self
     {
-        $this->date_cloture = $date_cloture;
+        $this->date_cloture_inscription = $date_cloture_inscription;
 
         return $this;
     }

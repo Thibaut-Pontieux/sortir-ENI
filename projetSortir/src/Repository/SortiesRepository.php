@@ -46,6 +46,34 @@ class SortiesRepository extends ServiceEntityRepository
     }
 
     // /**
+    //  * @return Sorties[] Returns an array of Sorties objects with ID transformed into name
+    //  */
+
+    public function findAllSorties()
+    {
+        $em =  $this->getEntityManager();
+        $dql =  "SELECT sorties.id,
+                        sorties.nom, 
+                        sorties.date_debut, 
+                        sorties.duree, 
+                        sorties.date_cloture_inscription, 
+                        sorties.nb_inscriptions_max, 
+                        sorties.description_infos, 
+                        sorties.url_photo, 
+                        participants.nom as organisateur, 
+                        lieux.nom as lieu, 
+                        etats.libelle as etat, 
+                        sites.nom as site 
+                FROM App\Entity\Sorties sorties 
+                INNER JOIN App\Entity\Participants participants WITH sorties.id_organisateur = participants.id 
+                INNER JOIN App\Entity\Lieux lieux WITH sorties.id_lieu = lieux.id 
+                INNER JOIN App\Entity\Etats etats WITH sorties.id_etat = etats.id 
+                INNER JOIN App\Entity\Sites sites WITH sorties.id_site = sites.id";
+        $stmt = $em->createQuery($dql);
+        return $stmt->getResult();
+    }
+
+    // /**
     //  * @return Sorties[] Returns an array of Sorties objects
     //  */
     /*

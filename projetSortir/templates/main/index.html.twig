@@ -121,22 +121,23 @@
                     </tr>
                 </thead>
                 <tbody>
+                {% for s in sorties %}
                     <tr>
-                        <td>Philo</td>
-                        <td>19/07/2018 23:45</td>
-                        <td>19/07/2018</td>
-                        <td>8/8</td>
-                        <td>En Cours</td>
+                        <td>{{ s.nom }}</td>
+                        <td>{{ s.date_debut | date('m/d/Y')}}</td>
+                        <td>{{ s.date_cloture_inscription | date('m/d/Y')}}</td>
+                        <td>X/{{ s.nb_inscriptions_max }}</td>
+                        <td>{{ s.etat}}</td>
                         <td>X</td>
-                        <td><a href="#">Spinoz A.</a></td>
+                        <td><a href="#">{{ s.organisateur }}</a></td>
                         <td>
-                        {# Cas 1 : Si on est "consulteur" ou "créateur" #}
+                            {# Cas 1 : Si on est "consulteur" ou "créateur" #}
                             <a href="#">Afficher</a>
                             {#
                             <a href="#">Se désister</a>
                             <a href="#">S'inscrire</a>
                             #}
-                        {# Cas 2 : Si on est "créateur" #}
+                            {# Cas 2 : Si on est "créateur" #}
                             {# Si "En création" #}
                             {#
                             <a href="#">Modifier</a>
@@ -146,6 +147,7 @@
                             {# <a href="#">Annuler</a> #}
                         </td>
                     </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
