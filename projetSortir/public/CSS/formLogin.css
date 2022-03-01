@@ -1,0 +1,47 @@
+form {
+    text-align: center;
+}
+
+.main {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(50px, auto);
+    grid-gap: 10px;
+}
+
+.loginLab {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: right;
+}
+
+.loginInp {
+    grid-column: 3;
+    grid-row: 2;
+    text-align: left;
+}
+
+.passwordLab {
+    grid-column: 2;
+    grid-row: 3;
+    text-align: right;
+}
+
+.passwordInp {
+    grid-column: 3;
+    grid-row: 3;
+    text-align: left;
+}
+
+.submit {
+    grid-column: 2;
+    grid-row: 4/5;
+    text-align: right;
+}
+
+.remember {
+    grid-column: 3;
+    grid-row: 4;
+    text-align: left;
+    padding-left: 4vh;
+}
