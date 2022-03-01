@@ -26,7 +26,10 @@ security:
             logout:
                 path: logout
                 # Redirection après déconnexion
-                target: login                
+                target: login    
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800    
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
