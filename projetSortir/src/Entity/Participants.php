@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @UniqueEntity(fields={"pseudo"}, message="There is already an account with this pseudo")
@@ -14,7 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=ParticipantsRepository::class)
  */
-class Participants
+class Participants implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -49,7 +51,7 @@ class Participants
     private $mail;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string")
      */
     private $mdp;
 
@@ -62,7 +64,10 @@ class Participants
      * @ORM\Column(type="boolean")
      */
     private $actif;
-
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
     /**
      * @ORM\OneToMany(targetEntity=Inscriptions::class, mappedBy="id_participant", orphanRemoval=true)
      */
@@ -118,7 +123,7 @@ class Participants
     {
         return $this->prenom;
     }
-
+    
     public function setPrenom(string $prenom): self
     {
         $this->prenom = $prenom;
@@ -187,6 +192,25 @@ class Participants
     }
 
     /**
+     * Récupérer le rôle de l'utilisateur
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // Tous les participants ont au moins le rôle ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Inscriptions>
      */
     public function getInscriptions(): Collection
@@ -245,7 +269,7 @@ class Participants
 
         return $this;
     }
-
+    
     public function removeSortiesOrganisee(Sorties $sortiesOrganisee): self
     {
         if ($this->sorties_organisees->removeElement($sortiesOrganisee)) {
@@ -258,7 +282,56 @@ class Participants
         return $this;
     }
 
-    public function __toString() {
-        return $this->nom;
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->pseudo;
+    }
+
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->pseudo;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->mdp;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->mdp = $password;
+
+        return $this;
+    }
+
+        /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }
