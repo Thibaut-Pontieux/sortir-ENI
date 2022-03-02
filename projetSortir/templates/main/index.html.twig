@@ -18,13 +18,13 @@
                     <b><label>Date du jour :</label><span> Date</span></b>
                 </p>
                 <p>
-                    <b><label>Participant :</label><span> Nom Prénom</span></b>
+                    <b><label>Participant :</label><span>Nom Prénom</span></b>
                 </p>
             </div>
         </div>
         {# Deuxième ligne: Filtrer les sorties #}
         <h2>Filtrer les sorties</h2>
-        <form class="row align-items-center">
+        <form class="row align-items-center" method="post" action="{{ path('filtered') }}">
             {# Colonne 1 : Select site #}
             <div class="col-6">
                 <div class="row align-items-center">
@@ -32,9 +32,10 @@
                         <label for="siteSelect" class="col-form-label">Site : </label>
                     </div>
                     <div class="col-auto">
-                        <select id="siteSelect" class="form-select">
-                            <option value="0" selected>Site 0</option>
-                            <option value="1">Site 1</option>
+                        <select id="siteSelect" name="siteSelect" class="form-select">
+                            {% for site in sites %}
+                                <option value="{{ site.id }}">{{ site.nom }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -46,7 +47,7 @@
                     <div class="col-auto">
                         <div class="input-group mb-3">
                             <span class="col-form-label input-group-text">🔍</span>
-                            <input id="nomSortie" type="text" class="form-control">
+                            <input id="nomSortie" name="nomSortie" type="text" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -56,38 +57,38 @@
                         <label for="dateDebut" class="col-form-label">Entre </label>
                     </div>
                     <div class="col-auto">
-                        <input id="dateDebut" type="date" class="form-control">
+                        <input id="dateDebut" name="dateDebut" type="date" class="form-control">
                     </div>
                     <div class="col-auto">
                         <label for="dateFin" class="col-form-label"> et </label>
                     </div>
                     <div class="col-auto">
-                        <input id="dateFin" type="date" class="form-control">
+                        <input id="dateFin" name="dateFin" type="date" class="form-control">
                     </div>
                 </div>
             </div>
             {# Colonne 2 : CheckBox Sortie #}
             <div class="col-4">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="sortiesOrganisateur">
+                    <input id="sortiesOrganisateur" name="sortiesOrganisateur" type="checkbox" class="form-check-input" value="">
                     <label class="form-check-label" for="sortiesOrganisateur">
                         Sorties dont je suis l'organisateur/trice.
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="sortiesInscrit">
+                    <input  id="sortiesInscrit" name="sortiesInscrit" type="checkbox" class="form-check-input" value="">
                     <label class="form-check-label" for="sortiesInscrit">
                         Sorties auxquelles je suis inscrit/e.
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="sortiesNonInscrit">
+                    <input id="sortiesNonInscrit" name="sortiesNonInscrit" type="checkbox" class="form-check-input" value="">
                     <label class="form-check-label" for="sortiesNonInscrit">
                         Sorties auxquelles je ne suis pas inscrit/e.
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="sortiesPassees">
+                    <input id="sortiesPassees" name="sortiesPassees" type="checkbox" class="form-check-input" value="">
                     <label class="form-check-label" for="sortiesPassees">
                         Sorties passées.
                     </label>
@@ -95,7 +96,7 @@
             </div>
             {# Colonne 3 : Bouton rechercher #}
             <div class="col-2">
-                <button type="button" class="btn btn-primary">Rechercher</button>
+                <button type="submit" class="btn btn-primary">Rechercher</button>
             </div>
         </form>
         <hr>
@@ -121,15 +122,16 @@
                     </tr>
                 </thead>
                 <tbody>
+                {% if sorties %}
                 {% for s in sorties %}
                     <tr>
                         <td>{{ s.nom }}</td>
-                        <td>{{ s.date_debut | date('m/d/Y')}}</td>
+                        {#<td>{{ s.date_debut | date('m/d/Y')}}</td>
                         <td>{{ s.date_cloture_inscription | date('m/d/Y')}}</td>
                         <td>X/{{ s.nb_inscriptions_max }}</td>
                         <td>{{ s.etat}}</td>
                         <td>X</td>
-                        <td><a href="#">{{ s.organisateur }}</a></td>
+                        <td><a href="#">{{ s.organisateur }}</a></td>#}
                         <td>
                             {# Cas 1 : Si on est "consulteur" ou "créateur" #}
                             <a href="#">Afficher</a>
@@ -148,6 +150,7 @@
                         </td>
                     </tr>
                 {% endfor %}
+                {% endif %}
                 </tbody>
             </table>
         </div>

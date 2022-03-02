@@ -9,7 +9,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class LoginController extends AbstractController
 {
-    #[Route('/login', name: 'login')]
+    /**
+     * @Route("/login", name="login")
+     */
     public function index(AuthenticationUtils $authenticationUtils): Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -24,8 +26,9 @@ class LoginController extends AbstractController
             'last_username' => $lastUsername,
         ]);
     }
-
-    #[Route('/logout', name: 'logout')]
+    /**
+     * @Route("/logout", name="logout")
+     */
     public function logout(): Response
     {
         throw new \Exception('Ne pas oublier d\'activer la deconnexion dans security.yaml');

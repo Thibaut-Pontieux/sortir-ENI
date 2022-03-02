@@ -4,9 +4,13 @@ namespace App\Repository;
 
 use App\Entity\Sorties;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\BooleanType;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Config\Definition\BooleanNode;
+use Symfony\Component\Validator\Constraints\Date;
+use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Sorties|null find($id, $lockMode = null, $lockVersion = null)
@@ -48,8 +52,7 @@ class SortiesRepository extends ServiceEntityRepository
     // /**
     //  * @return Sorties[] Returns an array of Sorties objects with ID transformed into name
     //  */
-
-    public function findAllSorties()
+   public function findAllSorties()
     {
         $em =  $this->getEntityManager();
         $dql =  "SELECT sorties.id,
@@ -71,6 +74,106 @@ class SortiesRepository extends ServiceEntityRepository
                 INNER JOIN App\Entity\Sites sites WITH sorties.id_site = sites.id";
         $stmt = $em->createQuery($dql);
         return $stmt->getResult();
+    }
+
+    // /**
+    //  * @return Sorties[] Returns an array of Sorties objects filtered by what user ask
+    //  */
+    public function findFilteredSorties(
+        Int $site,
+        String $sortie
+        //Date $dateDebut,
+        //Date $dateFin,
+        //BooleanType $organisateur,
+        //BooleanNode $inscrit,
+        //BooleanNode $nonInscrit,
+        //BooleanNode $sortiesPassees
+    ){
+        $res = $this->createQueryBuilder('s');
+        //$res->setParameter('dateDebut', '%'.$dateDebut.'%');
+        //$res->setParameter('dateFin', '%'.$dateFin.'%');
+        //$res->setParameter('organisateur', '%'.$organisateur.'%');
+        //$res->setParameter('inscrit', '%'.$inscrit.'%');
+        //$res->setParameter('nonInscrit', '%'.$nonInscrit.'%');
+        //$res->setParameter('sortiePassees', '%'.$sortiesPassees.'%');
+
+        if($site !== 0){
+            $res->where($res->expr()->eq('s.id_site',':site'));
+            $res->setParameter('site', $site);
+        }
+
+        if($sortie !== ""){
+            $res->andwhere($res->expr()->like('s.nom',':sortie'));
+            $res->setParameter('sortie', '%'.$sortie.'%');
+        }
+        /*if(dateDebut !== ""){
+
+        }
+        if(dateFin !== ""){
+
+        }
+        if(organisateur ==""){
+
+        }
+        if(inscrit == ""){
+
+        }
+        if(nonInscrit == ""){
+
+        }
+        if(sortiePassees ==""){
+
+        }*/
+
+        $res->getQuery()
+            ->getResult();
+        dump($res);
+
+
+
+
+
+        return $res;
+
+
+        /*
+        if($site){
+            $res->setParameter('site',$site);
+            $res->where('s.id_site = :site');
+        }
+        if($sortie){
+            $res->setParameter('sortie',$sortie);
+            $res->where('s.id_site = :site');
+            $res->expr()->like('sortie');
+        }
+        if($dateDebut){
+
+        }
+        if($dateFin){
+
+        }
+        if($organisateur){
+
+        }
+        if($inscrit){
+
+        }
+        if($nonInscrit){
+
+        }
+        if($sortiesPassees){
+
+        }
+
+        return $res;
+            ->andWhere('s.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('s.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+            ;
+        */
     }
 
     // /**
