@@ -13,3 +13,11 @@
 .flash-error {
     background-color: #c91717;
 }
+
+.navbar {
+    background-color: #313131;
+}
+
+.navbar a{
+    color: #FFFFFF;
+}

@@ -23,12 +23,10 @@
         {% endblock %}
     </head>
     <body>
-        {% if app.user %}
-            <header>
-                {# Nav #}
-                {%  include "inc/nav.html.twig" %}
-            </header>
-        {% endif %}
+        <header>
+            {# Nav #}
+            {%  include "inc/nav.html.twig" %}
+        </header>
         {# Title #}
         <h1>{% block mainTitle %}{% endblock %}</h1>
 
