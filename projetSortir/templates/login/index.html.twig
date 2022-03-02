@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/formLogin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+{% endblock %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block mainTitle %}Connexion{% endblock %}
+
+{% block body %}
+    <form action="{{ path('login') }}" method="post" class="form">
+    <div class="main">
+        <div class="loginLab">
+            <label for="pseudo">Pseudo:</label>
+        </div>
+        <div class="loginInp">
+            <input type="text" id="pseudo" name="_username" value="{{ last_username }}" required/>            
+        </div>
+        <div class="passwordLab">
+            <label for="mdp">Mot de passe:</label>
+        </div>
+        <div class="passwordInp">
+            <input type="password" id="mdp" name="_password" required/>   
+        </div>
+        <div class="submit">
+            <button type="submit" class="btn btn-primary btn-lg">Connexion</button>
+        </div>
+        <div class="remember">
+            <label>
+                <input type="checkbox" id"remember" name="_remember_me">
+                Se souvenir de moi
+            </label>
+            <div>
+                <a href="#">Mot de passe oublié ?</a>
+            </div>
+        </div>
+    {% for categorie, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash flash-{{ categorie }}">
+                {{ message }}
+            </div>    
+        {% endfor %}
+    {% endfor %}
+    </div>
+    {# On redirige l'utilisateur s'il parvient à se connecter #}
+        <input type="hidden" name="_target_path" value="/"/>
+        {# Jeton d'authentificaiton pour se protéger de la faille csrf #}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        
+    </form>
+{% endblock %}
