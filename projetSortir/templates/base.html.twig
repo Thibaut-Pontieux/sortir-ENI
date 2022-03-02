@@ -23,11 +23,12 @@
         {% endblock %}
     </head>
     <body>
-        <header>
-            {# Nav #}
-            {%  include "inc/nav.html.twig" %}
-        </header>
-
+        {% if app.user %}
+            <header>
+                {# Nav #}
+                {%  include "inc/nav.html.twig" %}
+            </header>
+        {% endif %}
         {# Title #}
         <h1>{% block mainTitle %}{% endblock %}</h1>
 
@@ -35,7 +36,7 @@
         {% block body %}{% endblock %}
 
         {# Footer #}
-        <footer class="footer py-3 bg-light">
+        <footer class="footer py-3 bg-light fixed-bottom text-center">
             &copy; Sortir.com {{ date() | date("Y") }}
         </footer>
     </body>
