@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\Inscriptions;
+use App\Entity\Site;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Inscriptions|null find($id, $lockMode = null, $lockVersion = null)
- * @method Inscriptions|null findOneBy(array $criteria, array $orderBy = null)
- * @method Inscriptions[]    findAll()
- * @method Inscriptions[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Site|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Site|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Site[]    findAll()
+ * @method Site[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class InscriptionsRepository extends ServiceEntityRepository
+class SiteRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Inscriptions::class);
+        parent::__construct($registry, Site::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Inscriptions $entity, bool $flush = true): void
+    public function add(Site $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -37,7 +37,7 @@ class InscriptionsRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Inscriptions $entity, bool $flush = true): void
+    public function remove(Site $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -46,15 +46,15 @@ class InscriptionsRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Inscriptions[] Returns an array of Inscriptions objects
+    //  * @return Site[] Returns an array of Site objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
+            ->orderBy('s.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -63,10 +63,10 @@ class InscriptionsRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Inscriptions
+    public function findOneBySomeField($value): ?Site
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

@@ -9,7 +9,7 @@ security:
     providers:
         app_user_provider:
             entity:
-                class: App\Entity\Participants
+                class: App\Entity\Participant
                 property: pseudo
     firewalls:
         dev:

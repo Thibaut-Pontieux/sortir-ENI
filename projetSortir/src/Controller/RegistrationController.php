@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Participants;
-use App\Entity\Sites;
+use App\Entity\Participant;
+use App\Entity\Site;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Id;
@@ -15,12 +15,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
-      /**
+    /**
      * @Route("/register", name="register")
      */
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        $user = new Participants();
+        $user = new Participant();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 

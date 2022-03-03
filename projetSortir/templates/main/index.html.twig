@@ -1,12 +1,159 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/accueil.css') }}">
+{% endblock %}
+
 {# Title #}
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {# Body #}
 {% block body %}
-<div class="">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-    This friendly message
-</div>
+    <div class="container-fluid">
+        {# Première ligne : Date du jour et participant #}
+        <div class="row align-items-center">
+            <div class="col-9"></div>
+            <div class="col-3">
+                <p>
+                    <b><label>Date du jour :</label><span> Date</span></b>
+                </p>
+                <p>
+                    <b><label>Participant :</label><span>Nom Prénom</span></b>
+                </p>
+            </div>
+        </div>
+        {# Deuxième ligne: Filtrer les sorties #}
+        <h2>Filtrer les sorties</h2>
+        <form class="row align-items-center" method="get" action="{{ path('filtered') }}">
+            {# Colonne 1 : Select site #}
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <label for="siteSelect" class="col-form-label">Site : </label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="siteSelect" name="siteSelect" class="form-select">
+                            <option value="0">Tous</option>
+                            {% for site in sites %}
+                                <option value="{{ site.id }}">{{ site.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {# Recherche nom de la sortie #}
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <label for="nomSortie" class="col-form-label">Le nom de la sortie contient : </label>
+                    </div>
+                    <div class="col-auto">
+                        <div class="input-group mb-3">
+                            <span class="col-form-label input-group-text">🔍</span>
+                            <input id="nomSortie" name="nomSortie" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                {# Selecteur des dates #}
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <label for="dateDebut" class="col-form-label">Entre </label>
+                    </div>
+                    <div class="col-auto">
+                        <input id="dateDebut" name="dateDebut" type="date" class="form-control">
+                    </div>
+                    <div class="col-auto">
+                        <label for="dateFin" class="col-form-label"> et </label>
+                    </div>
+                    <div class="col-auto">
+                        <input id="dateFin" name="dateFin" type="date" class="form-control">
+                    </div>
+                </div>
+            </div>
+            {# Colonne 2 : CheckBox Sortie #}
+            <div class="col-4">
+                <div class="form-check">
+                    <input id="sortiesOrganisateur" name="sortiesOrganisateur" type="checkbox" class="form-check-input" value="">
+                    <label class="form-check-label" for="sortiesOrganisateur">
+                        Sorties dont je suis l'organisateur/trice.
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input  id="sortiesInscrit" name="sortiesInscrit" type="checkbox" class="form-check-input" value="">
+                    <label class="form-check-label" for="sortiesInscrit">
+                        Sorties auxquelles je suis inscrit/e.
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input id="sortiesNonInscrit" name="sortiesNonInscrit" type="checkbox" class="form-check-input" value="">
+                    <label class="form-check-label" for="sortiesNonInscrit">
+                        Sorties auxquelles je ne suis pas inscrit/e.
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input id="sortiesPassees" name="sortiesPassees" type="checkbox" class="form-check-input" value="">
+                    <label class="form-check-label" for="sortiesPassees">
+                        Sorties passées.
+                    </label>
+                </div>
+            </div>
+            {# Colonne 3 : Bouton rechercher #}
+            <div class="col-2">
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+            </div>
+        </form>
+        <hr>
+        {# Troisième ligne : Bouton créer une sortie #}
+        <div id="ligneBoutonCreerSortie" class="row align-items-center">
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary">Créer une sortie</button>
+            </div>
+        </div>
+        {# Quatrième ligne : Tableau des sorties #}
+        <div id="table" class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Nom de la sortie</th>
+                        <th scope="col">Date de la sortie</th>
+                        <th scope="col">Clôture</th>
+                        <th scope="col">Inscrits/Places</th>
+                        <th scope="col">Etat</th>
+                        <th scope="col">Inscrits</th>
+                        <th scope="col">Organisateur</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if sorties %}
+                {% for s in sorties %}
+                    <tr>
+                        <td>{{ s.nom }}</td>
+                        <td>{{ s.date_debut | date('m/d/Y')}}</td>
+                        <td>{{ s.date_cloture_inscription | date('m/d/Y')}}</td>
+                        {#<td>X/{{ s.nb_inscriptions_max }}</td>#}
+                        <td>{{ s.id_etat.libelle }}</td>
+                        <td>X</td>
+                        {# <td><a href="#">{{ s.organisateur }}</a></td>#}
+                        <td>
+                            {# Cas 1 : Si on est "consulteur" ou "créateur" #}
+                            <a href="#">Afficher</a>
+                            {#
+                            <a href="#">Se désister</a>
+                            <a href="#">S'inscrire</a>
+                            #}
+                            {# Cas 2 : Si on est "créateur" #}
+                            {# Si "En création" #}
+                            {#
+                            <a href="#">Modifier</a>
+                            <a href="#">Publier</a>
+                            #}
+                            {# Si "Ouvert" #}
+                            {# <a href="#">Annuler</a> #}
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}
