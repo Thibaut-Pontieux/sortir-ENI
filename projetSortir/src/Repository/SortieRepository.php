@@ -102,18 +102,17 @@ class SortieRepository extends ServiceEntityRepository
         //?BooleanNode $nonInscrit,
         //?BooleanNode $sortiesPassees
     ){
-        /*$res = $this->createQueryBuilder('s')
-                    ->join('s.id_organisateur', 'organisateur' )
-                    ->join('s.id_lieu', 'lieu' )
-                    ->join('s.id_etat', 'etat' )
-                    ->join('s.id_site', 'site' )
+        $res = $this->createQueryBuilder('s')
+                    ->join('s.organisateur', 'organisateur' )
+                    ->join('s.lieu', 'lieu' )
+                    ->join('s.etat', 'etat' )
+                    ->join('s.site', 'site' )
                     ->addSelect('organisateur')
                     ->addSelect('lieu')
                     ->addSelect('etat')
                     ->addSelect('site');
 
-        //$res->select('s.nom');
-        if($site !== ""){
+        if($site !== 0){
             $res->andWhere('s.id_site = :site')
                 ->setParameter('site', $site);
         }
@@ -128,7 +127,7 @@ class SortieRepository extends ServiceEntityRepository
         if(!empty($dateFin)){
             $res->andWhere('s.date_debut <= :dateFin')
                 ->setParameter('dateFin', new Datetime($dateFin));
-        }
+        }/*
         if(organisateur ==""){
             $res->andWhere('s.id_organisateur = :organisateur')
                 ->setParameter('organisateur', 1);
@@ -144,11 +143,10 @@ class SortieRepository extends ServiceEntityRepository
         if(sortiePassees ==""){
             $res->andWhere('s.sortiePassees = :sortiePassees')
                 ->setParameter('sortiePassees', 1);
-        }
-
-
+        }*/
+        
         return $res->getQuery()
-                    ->getResult();*/
+                    ->getResult();
     }
 
     // /**

@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/accueil.css') }}">
 {% endblock %}
 
@@ -107,6 +108,13 @@
                 <button type="button" class="btn btn-primary">Créer une sortie</button>
             </div>
         </div>
+        {% for categorie, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash flash-{{ categorie }}">
+                    {{ message }}
+                </div>    
+            {% endfor %}
+        {% endfor %}
         {# Quatrième ligne : Tableau des sorties #}
         <div id="table" class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar">
             <table class="table table-bordered table-striped">
@@ -136,10 +144,8 @@
                         <td>
                             {# Cas 1 : Si on est "consulteur" ou "créateur" #}
                             <a href="#">Afficher</a>
-                            {#
-                            <a href="#">Se désister</a>
-                            <a href="#">S'inscrire</a>
-                            #}
+                            <a href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
+                            <a href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
                             {# Cas 2 : Si on est "créateur" #}
                             {# Si "En création" #}
                             {#

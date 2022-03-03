@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Inscriptions;
-use App\Entity\Participants;
-use App\Repository\InscriptionsRepository;
-use App\Repository\ParticipantsRepository;
-use App\Repository\SortiesRepository;
+use App\Entity\Inscription;
+use App\Entity\Participant;
+use App\Repository\InscriptionRepository;
+use App\Repository\ParticipantRepository;
+use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,11 +25,11 @@ class InscriptionController extends AbstractController
     }
 
     /**
-     * @Route("/inscrire/add", name="add_participation")
+     * @Route("/inscrire/add/{idSortie}", name="add_participation")
      */
-    public function participer(EntityManagerInterface $em, ParticipantsRepository $participant, SortiesRepository $sorties, InscriptionsRepository $inscriptions): Response
+    public function participer($idSortie, EntityManagerInterface $em, ParticipantRepository $participant, SortieRepository $sorties, InscriptionRepository $inscriptions): Response
     {
-        $i = new Inscriptions();
+        $i = new Inscription();
         $u = $this->getUser();
         if (empty($u))
         {
@@ -37,21 +37,19 @@ class InscriptionController extends AbstractController
         }
         else {
             $user = $participant->findOneBy(array('pseudo' => $u->getUserIdentifier()));
-            $sortie = $sorties->find(1);
-            $dejaInscrit = $inscriptions->findOneBy(array('id_sortie' => 1, 'id_participant' => $user->getId()));
+            $sortie = $sorties->find($idSortie);
+            $dejaInscrit = $inscriptions->findOneBy(array('sortie' => $idSortie, 'participant' => $user->getId()));
 
             // Si l'utilisateur est déjà inscrit alors on ne l'inscrit pas une deuxième fois
             if (!empty($dejaInscrit))
             {
                 $this->addFlash("error", "Vous êtes déjà inscrit pour cette sortie");
-                return $this->render('inscrire/index.html.twig', [
-                    'controller_name' => 'InscrireController',
-                ]);
+                return $this->redirectToRoute('app_main');
             }
 
             // Initilisation de l'inscription
-            $i->setIdParticipant($user);
-            $i->setIdSortie($sortie);
+            $i->setParticipant($user);
+            $i->setSortie($sortie);
             $i->setDate(new \DateTime());
 
             // Si la date de cloture est dépassée on ne peut plus s'inscrire
@@ -65,24 +63,22 @@ class InscriptionController extends AbstractController
                 $this->addFlash("success", "L'inscription a bien été prise en compte");
             }
         }
-        return $this->render('inscrire/index.html.twig', [
-            'controller_name' => 'InscrireController',
-        ]);
+        return $this->redirectToRoute('app_main');
     }
 
     /**
-     * @Route("/inscrire/remove", name="remove_participation")
+     * @Route("/inscrire/remove/{idSortie}", name="remove_participation")
      */
-    public function desister(EntityManagerInterface $em, ParticipantsRepository $participant, SortiesRepository $sorties, InscriptionsRepository $inscriptions): Response 
+    public function desister($idSortie, EntityManagerInterface $em, ParticipantRepository $participant, SortieRepository $sorties, InscriptionRepository $inscriptions): Response 
     {
         $u = $this->getUser();
         if (empty($u))
         {
             $this->addFlash("error", "Veuillez vous authentifier avant d'essayer de vous inscrire à une sortie");
+            return $this->redirectToRoute('app_main');
         }
         $user = $participant->findOneBy(array('pseudo' => $u->getUserIdentifier()));
-        $sortie = $sorties->find(1);
-        $estInscrit = $inscriptions->findOneBy(array('id_sortie' => 1, 'id_participant' => $user->getId()));
+        $estInscrit = $inscriptions->findOneBy(array('sortie' => $idSortie, 'participant' => $user->getId()));
 
         if (!empty($estInscrit))
         {
@@ -94,9 +90,7 @@ class InscriptionController extends AbstractController
             $this->addFlash("error", "Vous ne participez pas à cette sortie");
         }
 
-        return $this->render('inscrire/index.html.twig', [
-            'controller_name' => 'InscrireController',
-        ]);
+        return $this->redirectToRoute('app_main');
     }
 
 }
