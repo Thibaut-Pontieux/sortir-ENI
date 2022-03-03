@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\InscriptionsRepository;
+use App\Repository\InscriptionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=InscriptionsRepository::class)
+ * @ORM\Entity(repositoryClass=InscriptionRepository::class)
  */
-class Inscriptions
+class Inscription
 {
     /**
      * @ORM\Id
@@ -23,16 +23,16 @@ class Inscriptions
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Sorties::class, inversedBy="inscriptions")
+     * @ORM\ManyToOne(targetEntity=Sortie::class, inversedBy="inscriptions")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $id_sortie;
+    private $sortie;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Participants::class, inversedBy="inscriptions")
+     * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="inscriptions")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $id_participant;
+    private $participant;
 
     public function getId(): ?int
     {
@@ -51,26 +51,26 @@ class Inscriptions
         return $this;
     }
 
-    public function getIdSortie(): ?Sorties
+    public function getSortie(): ?Sortie
     {
-        return $this->id_sortie;
+        return $this->sortie;
     }
 
-    public function setIdSortie(?Sorties $id_sortie): self
+    public function setSortie(?Sortie $sortie): self
     {
-        $this->id_sortie = $id_sortie;
+        $this->sortie = $sortie;
 
         return $this;
     }
 
-    public function getIdParticipant(): ?Participants
+    public function getParticipant(): ?Participant
     {
-        return $this->id_participant;
+        return $this->participant;
     }
 
-    public function setIdParticipant(?Participants $id_participant): self
+    public function setParticipant(?Participant $participant): self
     {
-        $this->id_participant = $id_participant;
+        $this->participant = $participant;
 
         return $this;
     }

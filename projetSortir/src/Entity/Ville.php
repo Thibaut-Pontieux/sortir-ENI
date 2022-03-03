@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\VillesRepository;
+use App\Repository\VilleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=VillesRepository::class)
+ * @ORM\Entity(repositoryClass=VilleRepository::class)
  */
-class Villes
+class Ville
 {
     /**
      * @ORM\Id
@@ -30,7 +30,7 @@ class Villes
     private $cp;
 
     /**
-     * @ORM\OneToMany(targetEntity=Lieux::class, mappedBy="id_ville")
+     * @ORM\OneToMany(targetEntity=Lieu::class, mappedBy="ville")
      */
     private $lieux;
 
@@ -69,29 +69,29 @@ class Villes
     }
 
     /**
-     * @return Collection<int, Lieux>
+     * @return Collection<int, Lieu>
      */
     public function getLieux(): Collection
     {
         return $this->lieux;
     }
 
-    public function addLieux(Lieux $lieu): self
+    public function addLieux(Lieu $lieu): self
     {
         if (!$this->lieux->contains($lieu)) {
             $this->lieux[] = $lieu;
-            $lieu->setIdVille($this);
+            $lieu->setVille($this);
         }
 
         return $this;
     }
 
-    public function removeLieux(Lieux $lieu): self
+    public function removeLieux(Lieu $lieu): self
     {
         if ($this->lieux->removeElement($lieu)) {
             // set the owning side to null (unless already changed)
-            if ($lieu->getIdVille() === $this) {
-                $lieu->setIdVille(null);
+            if ($lieu->getVille() === $this) {
+                $lieu->setVille(null);
             }
         }
 

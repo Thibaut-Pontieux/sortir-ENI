@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\Inscriptions;
+use App\Entity\Inscription;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Inscriptions|null find($id, $lockMode = null, $lockVersion = null)
- * @method Inscriptions|null findOneBy(array $criteria, array $orderBy = null)
- * @method Inscriptions[]    findAll()
- * @method Inscriptions[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Inscription|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Inscription|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Inscription[]    findAll()
+ * @method Inscription[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class InscriptionsRepository extends ServiceEntityRepository
+class InscriptionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Inscriptions::class);
+        parent::__construct($registry, Inscription::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Inscriptions $entity, bool $flush = true): void
+    public function add(Inscription $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -37,7 +37,7 @@ class InscriptionsRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Inscriptions $entity, bool $flush = true): void
+    public function remove(Inscription $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -46,7 +46,7 @@ class InscriptionsRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Inscriptions[] Returns an array of Inscriptions objects
+    //  * @return Inscription[] Returns an array of Inscription objects
     //  */
     /*
     public function findByExampleField($value)
@@ -63,7 +63,7 @@ class InscriptionsRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Inscriptions
+    public function findOneBySomeField($value): ?Inscription
     {
         return $this->createQueryBuilder('i')
             ->andWhere('i.exampleField = :val')
