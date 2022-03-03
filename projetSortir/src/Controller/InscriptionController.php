@@ -69,7 +69,7 @@ class InscriptionController extends AbstractController
     /**
      * @Route("/inscrire/remove/{idSortie}", name="remove_participation")
      */
-    public function desister($idSortie, EntityManagerInterface $em, ParticipantRepository $participant, SortieRepository $sorties, InscriptionRepository $inscriptions): Response 
+    public function desister($idSortie, EntityManagerInterface $em, InscriptionRepository $inscriptions): Response 
     {
         $u = $this->getUser();
         if (empty($u))
@@ -77,8 +77,7 @@ class InscriptionController extends AbstractController
             $this->addFlash("error", "Veuillez vous authentifier avant d'essayer de vous inscrire à une sortie");
             return $this->redirectToRoute('app_main');
         }
-        $user = $participant->findOneBy(array('pseudo' => $u->getUserIdentifier()));
-        $estInscrit = $inscriptions->findOneBy(array('sortie' => $idSortie, 'participant' => $user->getId()));
+        $estInscrit = $inscriptions->findOneBy(array('sortie' => $idSortie, 'participant' => $u));
 
         if (!empty($estInscrit))
         {
