@@ -24,7 +24,7 @@
         </div>
         {# Deuxième ligne: Filtrer les sorties #}
         <h2>Filtrer les sorties</h2>
-        <form class="row align-items-center" method="post" action="{{ path('filtered') }}">
+        <form class="row align-items-center" method="get" action="{{ path('filtered') }}">
             {# Colonne 1 : Select site #}
             <div class="col-6">
                 <div class="row align-items-center">
@@ -33,6 +33,7 @@
                     </div>
                     <div class="col-auto">
                         <select id="siteSelect" name="siteSelect" class="form-select">
+                            <option value="0">Tous</option>
                             {% for site in sites %}
                                 <option value="{{ site.id }}">{{ site.nom }}</option>
                             {% endfor %}
@@ -126,12 +127,12 @@
                 {% for s in sorties %}
                     <tr>
                         <td>{{ s.nom }}</td>
-                        {#<td>{{ s.date_debut | date('m/d/Y')}}</td>
+                        <td>{{ s.date_debut | date('m/d/Y')}}</td>
                         <td>{{ s.date_cloture_inscription | date('m/d/Y')}}</td>
-                        <td>X/{{ s.nb_inscriptions_max }}</td>
-                        <td>{{ s.etat}}</td>
+                        {#<td>X/{{ s.nb_inscriptions_max }}</td>#}
+                        <td>{{ s.id_etat.libelle }}</td>
                         <td>X</td>
-                        <td><a href="#">{{ s.organisateur }}</a></td>#}
+                        {# <td><a href="#">{{ s.organisateur }}</a></td>#}
                         <td>
                             {# Cas 1 : Si on est "consulteur" ou "créateur" #}
                             <a href="#">Afficher</a>

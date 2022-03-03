@@ -2,8 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\Participants;
-use App\Entity\Sites;
+use App\Entity\Participant;
+use App\Entity\Site;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -38,14 +38,14 @@ class RegistrationFormType extends AbstractType
             ->add('prenom')
             ->add('telephone')
             ->add('mail')
-            ->add('id_site', EntityType::class, ['choice_label' => 'nom', 'class' => Sites::class, 'label' => 'Site'])
+            ->add('site', EntityType::class, ['choice_label' => 'nom', 'class' => Site::class, 'label' => 'Site'])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Participants::class,
+            'data_class' => Participant::class,
         ]);
     }
 }

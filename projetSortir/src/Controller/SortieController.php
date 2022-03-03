@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Sorties;
-use App\Repository\EtatsRepository;
-use App\Repository\LieuxRepository;
-use App\Repository\ParticipantsRepository;
-use App\Repository\SitesRepository;
-use App\Repository\VillesRepository;
+use App\Entity\Sortie;
+use App\Repository\EtatRepository;
+use App\Repository\LieuRepository;
+use App\Repository\ParticipantRepository;
+use App\Repository\SiteRepository;
+use App\Repository\VilleRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +20,7 @@ class SortieController extends AbstractController
     /**
      * @Route("/sortie/add", name="sortie", methods={"GET"})
      */
-    public function index(VillesRepository $villeRepo, LieuxRepository $lieuRepo): Response
+    public function index(VilleRepository $villeRepo, LieuRepository $lieuRepo): Response
     {   //-- initialisation du form
         $villes = $villeRepo->findAll();
         $lieux = $lieuRepo->findAll();
@@ -36,7 +36,7 @@ class SortieController extends AbstractController
       /**
      * @Route("/sortie/add", name="sortie_add", methods={"POST"})
      */
-    public function add(EntityManagerInterface $em, VillesRepository $villeRepo, LieuxRepository $lieuRepo, ParticipantsRepository $orgaRepo, EtatsRepository $etatRepo, SitesRepository $siteRepo, Request $request): Response {
+    public function add(EntityManagerInterface $em, VilleRepository $villeRepo, LieuRepository $lieuRepo, ParticipantRepository $orgaRepo, EtatRepository $etatRepo, SiteRepository $siteRepo, Request $request): Response {
         
         $obj = $request->request->all();
 
@@ -69,14 +69,14 @@ class SortieController extends AbstractController
         else if ( $obj["ville"] == "no"){
             $errors[] = "Ville incorrecte";
         }else if ($obj["ville"] != "no" && $obj["ville"] != "no"){
-            if ($lieuRepo->find((int) $obj["lieu"])->getIdVille() != $villeRepo->find((int) $obj["ville"])){
+            if ($lieuRepo->find((int) $obj["lieu"])->getVille() != $villeRepo->find((int) $obj["ville"])){
                 $errors[] = "Ville et lieu incompatibles";
             }
         }
         
          //-- ajout de la sortie dans la bdd si aucune erreur
         if (count($errors) <= 0){
-            $sortie = new Sorties();
+            $sortie = new Sortie();
             $sortie->setNom($obj["nom-sortie"]);
             $sortie->setDateDebut(new Datetime($obj["date-debut"]));
             $sortie->setDuree((int) $obj["duree"]);
@@ -84,12 +84,12 @@ class SortieController extends AbstractController
             $sortie->setNbInscriptionsMax((int) $obj["nb-places"]);
             $obj["description"] ? $sortie->setDescriptionInfos($obj["description"]) : "";
             //-- par défaut organisateur = 1 ligne dans la BDD
-            $sortie->setIdOrganisateur($orgaRepo->find(1));
-            $sortie->setIdLieu($lieuRepo->find($obj["lieu"]));
+            $sortie->setParticipant($orgaRepo->find(1));
+            $sortie->setLieu($lieuRepo->find($obj["lieu"]));
             //-- par défaut état = 1 ligne dans la BDD
-            $sortie->setIdEtat($etatRepo->find(1));
+            $sortie->setEtat($etatRepo->find(1));
             //-- par défaut ville organisatrice (-> site) = 1 ligne dans la BDD
-            $sortie->setIdSite($siteRepo->find(1));
+            $sortie->setSite($siteRepo->find(1));
 
             $em->persist($sortie);
             $em->flush();

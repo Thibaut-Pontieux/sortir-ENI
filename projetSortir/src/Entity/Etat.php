@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\EtatsRepository;
+use App\Repository\EtatRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=EtatsRepository::class)
+ * @ORM\Entity(repositoryClass=EtatRepository::class)
  */
-class Etats
+class Etat
 {
     /**
      * @ORM\Id
@@ -25,7 +25,7 @@ class Etats
     private $libelle;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sorties::class, mappedBy="id_etat", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="idEtat", orphanRemoval=true)
      */
     private $sorties;
 
@@ -52,29 +52,29 @@ class Etats
     }
 
     /**
-     * @return Collection<int, Sorties>
+     * @return Collection<int, Sortie>
      */
     public function getSorties(): Collection
     {
         return $this->sorties;
     }
 
-    public function addSortie(Sorties $sortie): self
+    public function addSortie(Sortie $sortie): self
     {
         if (!$this->sorties->contains($sortie)) {
             $this->sorties[] = $sortie;
-            $sortie->setIdEtat($this);
+            $sortie->setEtat($this);
         }
 
         return $this;
     }
 
-    public function removeSortie(Sorties $sortie): self
+    public function removeSortie(Sortie $sortie): self
     {
         if ($this->sorties->removeElement($sortie)) {
             // set the owning side to null (unless already changed)
-            if ($sortie->getIdEtat() === $this) {
-                $sortie->setIdEtat(null);
+            if ($sortie->getEtat() === $this) {
+                $sortie->setEtat(null);
             }
         }
 
