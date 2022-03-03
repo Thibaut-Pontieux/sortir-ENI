@@ -134,7 +134,7 @@ class SortieRepository extends ServiceEntityRepository
          */
         if($organisateur !== null){
             $res->andWhere('organisateur = :organisateur')
-                ->setParameter('organisateur', $this->security->getUser()->getId());
+                ->setParameter('organisateur', $this->security->getUser());
         }
         /*
          * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
