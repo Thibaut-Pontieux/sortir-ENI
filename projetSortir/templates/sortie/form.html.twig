@@ -7,79 +7,94 @@
     {% block body %}
 
     <div class="container">
-        <form method="post" action="{{ path('sortie_add') }}" >
+       
+        {% if id is defined %} 
+            <form method="post" action="{{ path('sortie_modify', {id : id}) }}">
+        {% else %}
+            <form method="post" action="{{ path('sortie_add') }}">
+                
+        {% endif %}
+
         <div class="row">
             <div class="col">
                 <div class="mb-3">
-                    <label for="nom-sortie" class="form-label">Nom de la sortie :</label>
+                    <label for="nom-sortie" class="form-label">Nom de la sortie</label>
                     <input type="text" value="{{(obj ? obj["nom-sortie"] : "")}}" class="form-control" name="nom-sortie" >
                 </div>
                 <div class="mb-3">
-                    <label for="date-debut" class="form-label">Date et heure de la sortie :</label>
+                    <label for="date-debut" class="form-label">Date et heure de la sortie</label>
                     <input type="datetime-local" value="{{(obj ? obj["date-debut"] : "")}}" class="form-control" name="date-debut">
                 </div>
                 <div class="mb-3">
-                    <label for="date-cloture" class="form-label">Date limite d'inscription :</label>
+                    <label for="date-cloture" class="form-label">Date limite d'inscription</label>
                     <input type="datetime-local" value="{{(obj ? obj["date-cloture"] : "")}}" class="form-control" name="date-cloture">
                 </div>
                 <div class="mb-3">
-                    <label for="nb-places" class="form-label">Nombre de places :</label>
+                    <label for="nb-places" class="form-label">Nombre de places</label>
                     <input type="number" value="{{(obj ? obj["nb-places"] : "")}}" class="form-control" name="nb-places">
                 </div>
                 <div class="mb-3">
-                    <label for="duree" class="form-label">Durée :</label>
+                    <label for="duree" class="form-label">Durée</label>
                     <input type="number" value="{{(obj ? obj["duree"] : "")}}" class="form-control" name="duree">
                 </div>
                 <div class="mb-3">
-                    <label for="description" class="form-label">Description et infos :</label>
+                    <label for="description" class="form-label">Description et infos</label>
                     <textarea  class="form-control" rows="3" name="description">{{(obj ? obj["description"] : "")}}</textarea>
                 </div>
             </div>
             <div class="col">
                <div class="mb-4">
-                    <label class="form-label">Ville organisatrice :</label>
+                    <label class="form-label">Ville organisatrice</label>
                     <p>...</p>
                 </div>
                 <div class="mb-4">
-                    <label for="ville" class="form-label">Ville :</label>
-                    <select class="form-select" name="ville" id="ville" onchange="handleSelect()">
-                        <option selected value="no">Selectionner une ville</option>
+                    <label for="ville" class="form-label">Ville</label>
+                    <select class="form-select" name="ville">
+                        <option value="no">Selectionner une ville</option>
                         {% for ville in villes %}
-                            <option value="{{ ville.id }}">{{ ville.nom }}</option> 
+                            {% if ville.id == (obj ? obj["ville"]  : "") %}
+                            <option selected value="{{ ville.id }}" sel>{{ ville.nom }}</option> 
+                            {% else %}
+                              <option value="{{ ville.id }}">{{ ville.nom }}</option> 
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>
                  <div class="mb-4">
-                    <label for="lieu" class="form-label">Lieu :</label>
-                    <select class="form-select" name="lieu" id="lieu">
-                     <option selected value="no">Selectionner un lieu</option>
-                        {% for lieu in lieux %}
-                            <option value="{{ lieu.id }}">{{ lieu.nom }}</option> 
+                    <label for="lieu" class="form-label">Lieu</label>
+                    <select class="form-select" name="lieu" value="{{(obj ? obj["lieu"] : "")}}">
+                     <option value="no">Selectionner un lieu</option>
+                      {% for lieu in lieux %}
+                            {% if lieu.id == (obj ? obj["lieu"]) %}
+                            <option selected value="{{ lieu.id }}" sel>{{ lieu.nom }}</option> 
+                            {% else %}
+                              <option value="{{ lieu.id }}">{{ lieu.nom }}</option> 
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="form-label">Rue :</label>
+                    <label class="form-label">Rue</label>
                     <p>...</p>
                 </div>
                 <div class="mb-4">
-                    <label class="form-label">Code postal :</label>
+                    <label class="form-label">Code postal</label>
                     <p>...</p>
                 </div>
                 <div class="mb-4">
-                    <label class="form-label">Latitude :</label>
+                    <label class="form-label">Latitude</label>
                     <p>...</p>
                 </div>
                 <div class="mb-4">
-                    <label class="form-label">Longitude :</label>
+                    <label class="form-label">Longitude</label>
                     <p>...</p>
                 </div>
                 {# <div class="mb-3">  
-                    <label for="latitude" class="form-label">Latitude :</label>
+                    <label for="latitude" class="form-label">Latitude</label>
                     <input type="text" class="form-control" name="latitude" >
                 </div>
                 <div class="mb-3">
-                    <label for="longitude" class="form-label">Longitude :</label>
+                    <label for="longitude" class="form-label">Longitude</label>
                     <input type="text" class="form-control" name="longitude" >
                 </div> #}
             </div>

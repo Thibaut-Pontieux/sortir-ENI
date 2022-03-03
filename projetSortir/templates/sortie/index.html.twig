@@ -10,18 +10,19 @@
         <div class=" my-4 row">
             {% if sortie != null %}
                 <ul class="list-group col">
-                    <li class="list-group-item"><span class="fw-bold">Nom de la sortie : </span>{{ sortie[0].nom }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Organisateur : </span>{{ sortie[0].organisateur }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Date et heure de la sortie : </span>{{ sortie[0].date_debut | date("d/m/Y") }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Date limite d'inscription : </span>{{ sortie[0].date_cloture_inscription | date("d/m/Y") }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Nombre de places : </span>{{ sortie[0].nb_inscriptions_max }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Durée : </span>{{ sortie[0].duree }} minute(s)</li>
-                    <li class="list-group-item"><span class="fw-bold">Ville : </span>{{ sortie[0].ville }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Lieu : </span>{{ sortie[0].lieu }}</li> 
-                    <li class="list-group-item"><span class="fw-bold">Rue : </span>{{  sortie[0].rue }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Code postal : </span>{{  sortie[0].cp }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Latitude : </span>{{ sortie[0].latitude }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Longitude : </span>{{  sortie[0].longitude }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Nom de la sortie : </span>{{ sortie.nom }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Organisateur : </span>{{ sortie.participant.nom }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Etat : </span>{{ sortie.etat.libelle }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Date et heure de la sortie : </span>{{ sortie.dateDebut | date("d/m/Y") }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Date limite d'inscription : </span>{{ sortie.dateClotureInscription | date("d/m/Y") }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Nombre de places : </span>{{ sortie.nbInscriptionsMax }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Durée : </span>{{ sortie.duree }} minute(s)</li>
+                    <li class="list-group-item"><span class="fw-bold">Ville : </span>{{ sortie.lieu.ville.nom }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Lieu : </span>{{ sortie.lieu.nom }}</li> 
+                    <li class="list-group-item"><span class="fw-bold">Rue : </span>{{  sortie.lieu.rue }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Code postal : </span>{{  sortie.lieu.ville.cp }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Latitude : </span>{{ sortie.lieu.latitude }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Longitude : </span>{{  sortie.lieu.longitude }}</li>
                 </ul>
 
                 <table class="table table-bordered my-4">
@@ -33,11 +34,11 @@
                         </tr>
                     </thead>
                     <tbody>             
-                        {% for incrit in incrits %}
+                        {% for incrit in sortie.inscriptions %}
                         <tr>
-                            <td>{{ incrit.pseudo }}</td>
-                            <td>{{ incrit.prenom }}</td>
-                            <td>{{ incrit.nom }}</td>
+                            <td>{{ incrit.participant.pseudo }}</td>
+                            <td>{{ incrit.participant.prenom }}</td>
+                            <td>{{ incrit.participant.nom }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
