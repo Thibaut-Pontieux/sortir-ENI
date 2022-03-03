@@ -54,23 +54,8 @@ class MainController extends AbstractController
         // On récupère les sites en base
         $sites = $siteRepository->findAll();
 
-        dump($req);
-        dump($req["nomSortie"]);
-
-
         //On récupère les sorties en fonction de de la requête
-        $sorties = $sortieRepository->findFilteredSorties(
-        (int)$req["siteSelect"],
-        $req["nomSortie"],
-        $req["dateDebut"],
-        $req["dateFin"]
-        //$req[sortiesOrganisateur],
-        //$req[sortiesInscrit],
-        //$req[sortiesNonInscrit],
-        //$req[sortiesPassees],
-
-        );
-        dump($sorties);
+        $sorties = $sortieRepository->findFilteredSorties($request);
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
             'sorties' => $sorties,

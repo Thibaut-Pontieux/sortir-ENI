@@ -25,7 +25,7 @@ class Etat
     private $libelle;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="idEtat", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="etat", orphanRemoval=true)
      */
     private $sorties;
 
