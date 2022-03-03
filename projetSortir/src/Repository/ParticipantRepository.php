@@ -45,6 +45,18 @@ class ParticipantRepository extends ServiceEntityRepository
         }
     }
 
+    public function findUser(Participant $user)
+    {
+        $res = $this->createQueryBuilder('p')
+            ->join('p.inscriptions', 'i')
+            ->addSelect('i')
+            ->andWhere('p.id = :id')
+            ->setParameter('id', $user);
+
+        return $res->getQuery()
+                   ->getResult();
+    }
+
     // /**
     //  * @return Participant[] Returns an array of Participant objects
     //  */

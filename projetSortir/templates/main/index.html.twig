@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/accueil.css') }}">
 {% endblock %}
 
@@ -107,6 +108,13 @@
                 <button type="button" class="btn btn-primary">Créer une sortie</button>
             </div>
         </div>
+        {% for categorie, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash flash-{{ categorie }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
         {# Quatrième ligne : Tableau des sorties #}
         <div id="table" class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar">
             <table class="table table-bordered table-striped">
@@ -124,22 +132,28 @@
                 </thead>
                 <tbody>
                 {% if sorties %}
-                {% for sortie in sorties %}
+                {% for s in sorties %}
                     <tr>
-                        <td>{{ sortie.nom }}</td>
-                        <td>{{ sortie.dateDebut | date('m/d/Y')}}</td>
-                        <td>{{ sortie.dateClotureInscription | date('m/d/Y')}}</td>
-                        <td>X/{{ sortie.nbInscriptionsMax }}</td>
-                        <td>{{ sortie.etat.libelle }}</td>
+                        <td>{{ s.nom }}</td>
+                        <td>{{ s.dateDebut | date('d/m/Y')}}</td>
+                        <td>{{ s.dateClotureInscription | date('d/m/Y')}}</td>
+                        <td>X/{{ s.nbInscriptionsMax }}</td>
+                        <td>{{ s.etat.libelle }}</td>
                         <td>X</td>
-                        <td><a href="#">{{ sortie.participant.nom  }}</a></td>
+                        <td><a href="#">{{ s.participant.nom }}</a></td>
                         <td>
                             {# Cas 1 : Si on est "consulteur" ou "créateur" #}
                             <a href="#">Afficher</a>
-                            {#
-                            <a href="#">Se désister</a>
-                            <a href="#">S'inscrire</a>
-                            #}
+                            {% set break = false %}
+                            {% for i in s.inscriptions %}
+                                {% if (app.user == i.participant) %}
+                                    <a href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
+                                    {% set break = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if not break %}
+                                    <a href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
+                            {% endif %}
                             {# Cas 2 : Si on est "créateur" #}
                             {# Si "En création" #}
                             {#

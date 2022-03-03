@@ -63,13 +63,14 @@ class SortieRepository extends ServiceEntityRepository
             ->join('sortie.lieu', 'lieu' )
             ->join('sortie.etat', 'etat' )
             ->join('sortie.site', 'site' )
+            ->leftJoin('sortie.inscriptions', 'inscriptions')
             ->addSelect('organisateur')
             ->addSelect('lieu')
             ->addSelect('etat')
-            ->addSelect('site');
-        dump($res->getQuery()->getResult());
+            ->addSelect('site')
+            ->addSelect('inscriptions');
         return $res->getQuery()
-            ->getResult();
+                   ->getResult();
     }
 
     // /**
@@ -166,7 +167,7 @@ class SortieRepository extends ServiceEntityRepository
 
         dump($res->getQuery()->getResult());
         return $res->getQuery()
-                    ->getResult();
+                   ->getResult();
     }
 
     // /**
