@@ -76,18 +76,17 @@ class SortieRepository extends ServiceEntityRepository
         $stmt = $em->createQuery($dql);
         return $stmt->getResult();*/
 
-        /*$res = $this->createQueryBuilder('s')
-            ->join('s.id_organisateur', 'organisateur' )
-            ->join('s.id_lieu', 'lieu' )
-            ->join('s.id_etat', 'etat' )
-            ->join('s.id_site', 'site' )
+        $res = $this->createQueryBuilder('s')
+            ->join('s.participant', 'organisateur' )
+            ->join('s.lieu', 'lieu' )
+            ->join('s.etat', 'etat' )
+            ->join('s.site', 'site' )
             ->addSelect('organisateur')
             ->addSelect('lieu')
             ->addSelect('etat')
             ->addSelect('site');
-        dump($res->getQuery()->getResult());
         return $res->getQuery()
-            ->getResult();*/
+                   ->getResult();
     }
 
     // /**

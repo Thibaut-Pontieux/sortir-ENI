@@ -127,12 +127,12 @@
                 {% for s in sorties %}
                     <tr>
                         <td>{{ s.nom }}</td>
-                        <td>{{ s.date_debut | date('m/d/Y')}}</td>
-                        <td>{{ s.date_cloture_inscription | date('m/d/Y')}}</td>
-                        {#<td>X/{{ s.nb_inscriptions_max }}</td>#}
-                        <td>{{ s.id_etat.libelle }}</td>
+                        <td>{{ s.dateDebut | date('m/d/Y')}}</td>
+                        <td>{{ s.dateClotureInscription | date('m/d/Y')}}</td>
+                        <td>X/{{ s.nbInscriptionsMax }}</td>
+                        <td>{{ s.etat.libelle }}</td>
                         <td>X</td>
-                        {# <td><a href="#">{{ s.organisateur }}</a></td>#}
+                        <td><a href="#">{{ s.participant.nom }}</a></td>
                         <td>
                             {# Cas 1 : Si on est "consulteur" ou "créateur" #}
                             <a href="#">Afficher</a>
