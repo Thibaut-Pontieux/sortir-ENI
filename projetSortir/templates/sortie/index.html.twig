@@ -2,97 +2,48 @@
 
 {% block title %}Sortie{% endblock %}
 
-    {% block mainTitle %}Créer une sortie{% endblock %}
+    {% block mainTitle %}Afficher une sortie{% endblock %}
 
     {% block body %}
 
     <div class="container">
-        <form method="post" >
-        <div class="row">
-            <div class="col">
-                <div class="mb-3">
-                    <label for="nom-sortie" class="form-label">Nom de la sortie</label>
-                    <input type="text" value="{{(obj ? obj["nom-sortie"] : "")}}" class="form-control" name="nom-sortie" >
-                </div>
-                <div class="mb-3">
-                    <label for="date-debut" class="form-label">Date et heure de la sortie</label>
-                    <input type="datetime-local" value="{{(obj ? obj["date-debut"] : "")}}" class="form-control" name="date-debut">
-                </div>
-                <div class="mb-3">
-                    <label for="date-cloture" class="form-label">Date limite d'inscription</label>
-                    <input type="datetime-local" value="{{(obj ? obj["date-cloture"] : "")}}" class="form-control" name="date-cloture">
-                </div>
-                <div class="mb-3">
-                    <label for="nb-places" class="form-label">Nombre de places</label>
-                    <input type="number" value="{{(obj ? obj["nb-places"] : "")}}" class="form-control" name="nb-places">
-                </div>
-                <div class="mb-3">
-                    <label for="duree" class="form-label">Durée</label>
-                    <input type="number" value="{{(obj ? obj["duree"] : "")}}" class="form-control" name="duree">
-                </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description et infos</label>
-                    <textarea  class="form-control" rows="3" name="description">{{(obj ? obj["description"] : "")}}</textarea>
-                </div>
-            </div>
-            <div class="col">
-               <div class="mb-4">
-                    <label class="form-label">Ville organisatrice</label>
-                    <p>...</p>
-                </div>
-                <div class="mb-4">
-                    <label for="ville" class="form-label">Ville</label>
-                    <select class="form-select" name="ville" id="ville" onchange="handleSelect()">
-                        <option selected value="no">Selectionner une ville</option>
-                        {% for ville in villes %}
-                            <option value="{{ ville.id }}">{{ ville.nom }}</option> 
+        <div class=" my-4 row">
+            {% if sortie != null %}
+                <ul class="list-group col">
+                    <li class="list-group-item"><span class="fw-bold">Nom de la sortie : </span>{{ sortie[0].nom }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Organisateur : </span>{{ sortie[0].organisateur }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Date et heure de la sortie : </span>{{ sortie[0].date_debut | date("d/m/Y") }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Date limite d'inscription : </span>{{ sortie[0].date_cloture_inscription | date("d/m/Y") }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Nombre de places : </span>{{ sortie[0].nb_inscriptions_max }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Durée : </span>{{ sortie[0].duree }} minute(s)</li>
+                    <li class="list-group-item"><span class="fw-bold">Ville : </span>{{ sortie[0].ville }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Lieu : </span>{{ sortie[0].lieu }}</li> 
+                    <li class="list-group-item"><span class="fw-bold">Rue : </span>{{  sortie[0].rue }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Code postal : </span>{{  sortie[0].cp }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Latitude : </span>{{ sortie[0].latitude }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Longitude : </span>{{  sortie[0].longitude }}</li>
+                </ul>
+
+                <table class="table table-bordered my-4">
+                    <thead>
+                        <tr>
+                        <th scope="col">Pseudo :</th>
+                        <th scope="col">Prénom :</th>
+                        <th scope="col">Nom :</th>
+                        </tr>
+                    </thead>
+                    <tbody>             
+                        {% for incrit in incrits %}
+                        <tr>
+                            <td>{{ incrit.pseudo }}</td>
+                            <td>{{ incrit.prenom }}</td>
+                            <td>{{ incrit.nom }}</td>
+                        </tr>
                         {% endfor %}
-                    </select>
-                </div>
-                 <div class="mb-4">
-                    <label for="lieu" class="form-label">Lieu</label>
-                    <select class="form-select" name="lieu" id="lieu">
-                     <option selected value="no">Selectionner un lieu</option>
-                        {% for lieu in lieux %}
-                            <option value="{{ lieu.id }}">{{ lieu.nom }}</option> 
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label class="form-label">Rue</label>
-                    <p>...</p>
-                </div>
-                <div class="mb-4">
-                    <label class="form-label">Code postal</label>
-                    <p>...</p>
-                </div>
-                <div class="mb-4">
-                    <label class="form-label">Latitude</label>
-                    <p>...</p>
-                </div>
-                <div class="mb-4">
-                    <label class="form-label">Longitude</label>
-                    <p>...</p>
-                </div>
-                {# <div class="mb-3">  
-                    <label for="latitude" class="form-label">Latitude</label>
-                    <input type="text" class="form-control" name="latitude" >
-                </div>
-                <div class="mb-3">
-                    <label for="longitude" class="form-label">Longitude</label>
-                    <input type="text" class="form-control" name="longitude" >
-                </div> #}
-            </div>
-        </div>
-            <div class="d-flex flex-wrap">
-                {% for error in errors %}
-                    <div class="alert alert-danger m-1" role="alert">
-                    {{ error }}
-                    </div>
-                {% endfor %}
-             </div>
-            <button type="submit" class="btn btn-dark my-2">Enregistrer</button>
-        </form>
+                    </tbody>
+                </table>
+            {% endif %}
+        </div> 
     </div>
 
     {% endblock body %}
