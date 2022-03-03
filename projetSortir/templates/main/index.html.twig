@@ -131,28 +131,28 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% if sorties %}
                 {% for s in sorties %}
+                    {% set inscrit = false %}
+                    {% for i in s.inscriptions %}
+                        {% if (user == i.participant) %}
+                            {% set inscrit = true %}
+                        {% endif %}
+                    {% endfor %}
                     <tr>
                         <td>{{ s.nom }}</td>
                         <td>{{ s.dateDebut | date('d/m/Y')}}</td>
                         <td>{{ s.dateClotureInscription | date('d/m/Y')}}</td>
                         <td>X/{{ s.nbInscriptionsMax }}</td>
                         <td>{{ s.etat.libelle }}</td>
-                        <td>X</td>
+                        <td>{% if inscrit %}X{% endif %}</td>
                         <td><a href="#">{{ s.participant.nom }}</a></td>
                         <td>
                             {# Cas 1 : Si on est "consulteur" ou "créateur" #}
                             <a href="#">Afficher</a>
-                            {% set break = false %}
-                            {% for i in s.inscriptions %}
-                                {% if (app.user == i.participant) %}
-                                    <a href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
-                                    {% set break = true %}
-                                {% endif %}
-                            {% endfor %}
-                            {% if not break %}
-                                    <a href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
+                            {% if inscrit %}
+                                <a href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
+                            {% else %}
+                                <a href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
                             {% endif %}
                             {# Cas 2 : Si on est "créateur" #}
                             {# Si "En création" #}
@@ -165,7 +165,6 @@
                         </td>
                     </tr>
                 {% endfor %}
-                {% endif %}
                 </tbody>
             </table>
         </div>
