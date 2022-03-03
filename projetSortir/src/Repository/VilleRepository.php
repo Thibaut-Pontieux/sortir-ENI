@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\Sites;
+use App\Entity\Ville;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Sites|null find($id, $lockMode = null, $lockVersion = null)
- * @method Sites|null findOneBy(array $criteria, array $orderBy = null)
- * @method Sites[]    findAll()
- * @method Sites[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Ville|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Ville|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Ville[]    findAll()
+ * @method Ville[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SitesRepository extends ServiceEntityRepository
+class VilleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Sites::class);
+        parent::__construct($registry, Ville::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Sites $entity, bool $flush = true): void
+    public function add(Ville $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -37,7 +37,7 @@ class SitesRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Sites $entity, bool $flush = true): void
+    public function remove(Ville $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -46,15 +46,15 @@ class SitesRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Sites[] Returns an array of Sites objects
+    //  * @return Ville[] Returns an array of Ville objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
+            ->orderBy('v.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -63,10 +63,10 @@ class SitesRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Sites
+    public function findOneBySomeField($value): ?Ville
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

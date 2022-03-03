@@ -10,6 +10,12 @@ use App\Repository\ParticipantsRepository;
 use App\Repository\SitesRepository;
 use App\Repository\SortiesRepository;
 use App\Repository\VillesRepository;
+use App\Entity\Sortie;
+use App\Repository\EtatRepository;
+use App\Repository\LieuRepository;
+use App\Repository\ParticipantRepository;
+use App\Repository\SiteRepository;
+use App\Repository\VilleRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,7 +45,7 @@ class SortieController extends AbstractController
       /**
      * @Route("/sortie/add", name="sortie_add", methods={"POST", "GET"})
      */
-    public function add(EntityManagerInterface $em, VillesRepository $villeRepo, LieuxRepository $lieuRepo, ParticipantsRepository $orgaRepo, EtatsRepository $etatRepo, SitesRepository $siteRepo, Request $request): Response 
+    public function add(EntityManagerInterface $em, VilleRepository $villeRepo, LieuRepository $lieuRepo, ParticipantRepository $orgaRepo, EtatRepository $etatRepo, SiteRepository $siteRepo, Request $request): Response 
     {
         //-- initialisation du form
         $villes = $villeRepo->findAll();
@@ -78,8 +84,8 @@ class SortieController extends AbstractController
             } 
             else if ( $obj["ville"] == "no"){
                 $errors[] = "Ville incorrecte";
-            }else if ($obj["ville"] != "no" && $obj["ville"] != "no"){
-                if ($lieuRepo->find((int) $obj["lieu"])->getIdVille() != $villeRepo->find((int) $obj["ville"])){
+            }else if ($obj["ville"] != "no" && $obj["lieu"] != "no"){
+                if ($lieuRepo->find((int) $obj["lieu"])->getVille() != $villeRepo->find((int) $obj["ville"])){
                     $errors[] = "Ville et lieu incompatibles";
                 }
             }
