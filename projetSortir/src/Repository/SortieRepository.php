@@ -69,7 +69,6 @@ class SortieRepository extends ServiceEntityRepository
                     ->join('sortie.lieu', 'lieu' )
                     ->join('sortie.etat', 'etat' )
                     ->join('sortie.site', 'site' );
-
         if( !(
             ($site == "0" || empty($site)) &&
             empty(trim($sortie)) &&
