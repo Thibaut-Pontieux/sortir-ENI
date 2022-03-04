@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\LieuRepository;
+use App\Repository\LieuxRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=LieuRepository::class)
+ * @ORM\Entity(repositoryClass=LieuxRepository::class)
  */
-class Lieu
+class Lieux
 {
     /**
      * @ORM\Id
@@ -40,13 +40,13 @@ class Lieu
     private $longitude;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Ville::class, inversedBy="lieux")
+     * @ORM\ManyToOne(targetEntity=Villes::class, inversedBy="lieux")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $ville;
+    private $id_ville;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="lieu", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Sorties::class, mappedBy="id_lieu", orphanRemoval=true)
      */
     private $sorties;
 
@@ -108,42 +108,42 @@ class Lieu
         return $this;
     }
 
-    public function getVille(): ?Ville
+    public function getIdVille(): ?Villes
     {
-        return $this->ville;
+        return $this->id_ville;
     }
 
-    public function setVille(?Ville $ville): self
+    public function setIdVille(?Villes $id_ville): self
     {
-        $this->ville = $ville;
+        $this->id_ville = $id_ville;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Sortie>
+     * @return Collection<int, Sorties>
      */
     public function getSorties(): Collection
     {
         return $this->sorties;
     }
 
-    public function addSortie(Sortie $sortie): self
+    public function addSortie(Sorties $sortie): self
     {
         if (!$this->sorties->contains($sortie)) {
             $this->sorties[] = $sortie;
-            $sortie->setLieu($this);
+            $sortie->setIdLieu($this);
         }
 
         return $this;
     }
 
-    public function removeSortie(Sortie $sortie): self
+    public function removeSortie(Sorties $sortie): self
     {
         if ($this->sorties->removeElement($sortie)) {
             // set the owning side to null (unless already changed)
-            if ($sortie->getLieu() === $this) {
-                $sortie->setLieu(null);
+            if ($sortie->getIdLieu() === $this) {
+                $sortie->setIdLieu(null);
             }
         }
 

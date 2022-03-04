@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\Etat;
+use App\Entity\Lieux;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Etat|null find($id, $lockMode = null, $lockVersion = null)
- * @method Etat|null findOneBy(array $criteria, array $orderBy = null)
- * @method Etat[]    findAll()
- * @method Etat[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Lieux|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Lieux|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Lieux[]    findAll()
+ * @method Lieux[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EtatRepository extends ServiceEntityRepository
+class LieuxRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Etat::class);
+        parent::__construct($registry, Lieux::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Etat $entity, bool $flush = true): void
+    public function add(Lieux $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -37,7 +37,7 @@ class EtatRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Etat $entity, bool $flush = true): void
+    public function remove(Lieux $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -46,15 +46,15 @@ class EtatRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Etat[] Returns an array of Etat objects
+    //  * @return Lieux[] Returns an array of Lieux objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
+            ->orderBy('l.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -63,10 +63,10 @@ class EtatRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Etat
+    public function findOneBySomeField($value): ?Lieux
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

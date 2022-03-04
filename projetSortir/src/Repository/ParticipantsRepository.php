@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\Participant;
+use App\Entity\Participants;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Participant|null find($id, $lockMode = null, $lockVersion = null)
- * @method Participant|null findOneBy(array $criteria, array $orderBy = null)
- * @method Participant[]    findAll()
- * @method Participant[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Participants|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Participants|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Participants[]    findAll()
+ * @method Participants[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ParticipantRepository extends ServiceEntityRepository
+class ParticipantsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Participant::class);
+        parent::__construct($registry, Participants::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Participant $entity, bool $flush = true): void
+    public function add(Participants $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -37,7 +37,7 @@ class ParticipantRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Participant $entity, bool $flush = true): void
+    public function remove(Participants $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -45,20 +45,8 @@ class ParticipantRepository extends ServiceEntityRepository
         }
     }
 
-    public function findUser(Participant $user)
-    {
-        $res = $this->createQueryBuilder('p')
-            ->join('p.inscriptions', 'i')
-            ->addSelect('i')
-            ->andWhere('p.id = :id')
-            ->setParameter('id', $user);
-
-        return $res->getQuery()
-                   ->getResult();
-    }
-
     // /**
-    //  * @return Participant[] Returns an array of Participant objects
+    //  * @return Participants[] Returns an array of Participants objects
     //  */
     /*
     public function findByExampleField($value)
@@ -75,7 +63,7 @@ class ParticipantRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Participant
+    public function findOneBySomeField($value): ?Participants
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.exampleField = :val')
