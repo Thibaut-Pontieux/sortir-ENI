@@ -90,7 +90,6 @@ class SortieRepository extends ServiceEntityRepository
                     ->join('sortie.lieu', 'lieu' )
                     ->join('sortie.etat', 'etat' )
                     ->join('sortie.site', 'site' );
-        dump($res->getQuery()->getResult());
 
         /*
          * Champ obligatoire avec par defaut "Tous"

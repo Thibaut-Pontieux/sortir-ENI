@@ -31,64 +31,80 @@ class InscriptionController extends AbstractController
     {
         $i = new Inscription();
         $u = $this->getUser();
+        
         if (empty($u))
         {
             $this->addFlash("error", "Veuillez vous authentifier avant d'essayer de vous inscrire à une sortie");
+            return $this->redirectToRoute('app_main');
         }
-        else {
-            $user = $participant->findOneBy(array('pseudo' => $u->getUserIdentifier()));
-            $sortie = $sorties->find($idSortie);
-            $dejaInscrit = $inscriptions->findOneBy(array('sortie' => $idSortie, 'participant' => $user->getId()));
+        
+        $user = $participant->findOneBy(array('pseudo' => $u->getUserIdentifier()));
+        $sortie = $sorties->find($idSortie);
 
-            // Si l'utilisateur est déjà inscrit alors on ne l'inscrit pas une deuxième fois
-            if (!empty($dejaInscrit))
+        // On vérifie s'il reste de la place pour s'inscrire
+        if(count($sortie->getInscriptions()) == $sortie->getNbInscriptionsMax())
+        {
+            $this->addFlash("error", "Il n'y a plus de place");
+            return $this->redirectToRoute('app_main');
+        }
+            
+        // On vérifie si l'utilisateur n'est pas déjà inscrit à la sortie
+        foreach ($sortie->getInscriptions() as $insc)
+        {
+            if ($insc->getParticipant() == $user)
             {
                 $this->addFlash("error", "Vous êtes déjà inscrit pour cette sortie");
                 return $this->redirectToRoute('app_main');
             }
-
-            // Initilisation de l'inscription
-            $i->setParticipant($user);
-            $i->setSortie($sortie);
-            $i->setDate(new \DateTime());
-
-            // Si la date de cloture est dépassée on ne peut plus s'inscrire
-            if ($sortie->getDateClotureInscription() < $i->getDate())
-            {
-                $this->addFlash("error", "La date de clôture est passée, impossible de s'inscrire");
-            }
-            else {
-                $em->persist($i);
-                $em->flush();
-                $this->addFlash("success", "L'inscription a bien été prise en compte");
-            }
         }
+
+        // Initilisation de l'inscription
+        $i->setParticipant($user);
+        $i->setSortie($sortie);
+        $i->setDate(new \DateTime());
+
+        // Si la date de cloture est dépassée on ne peut plus s'inscrire
+        if ($sortie->getDateClotureInscription() < $i->getDate())
+        {
+            $this->addFlash("error", "La date de clôture est passée, impossible de s'inscrire");
+        }
+        else {
+            $em->persist($i);
+            $em->flush();
+            $this->addFlash("success", "L'inscription a bien été prise en compte");
+        }
+
         return $this->redirectToRoute('app_main');
     }
 
     /**
      * @Route("/inscrire/remove/{idSortie}", name="remove_participation")
      */
-    public function desister($idSortie, EntityManagerInterface $em, InscriptionRepository $inscriptions): Response 
+    public function desister($idSortie, EntityManagerInterface $em, ParticipantRepository $participantRepository): Response 
     {
         $u = $this->getUser();
+
         if (empty($u))
         {
             $this->addFlash("error", "Veuillez vous authentifier avant d'essayer de vous inscrire à une sortie");
             return $this->redirectToRoute('app_main');
         }
-        $estInscrit = $inscriptions->findOneBy(array('sortie' => $idSortie, 'participant' => $u));
-
-        if (!empty($estInscrit))
+        
+        $user = $participantRepository->find($u);
+                
+        // On vérifie si l'utilisateur n'est pas déjà inscrit à la sortie
+        foreach ($user->getInscriptions() as $insc)
         {
-            $em->remove($estInscrit);
-            $em->flush();
-            $this->addFlash("success", "Vous ne participez plus à cette sortie");
+            if ($insc->getSortie()->getId() == $idSortie)
+            {
+                $em->remove($insc);
+                $em->flush();
+                $this->addFlash("success", "Vous ne participez plus à cette sortie");
+                return $this->redirectToRoute('app_main');
+            }
         }
-        else {
-            $this->addFlash("error", "Vous ne participez pas à cette sortie");
-        }
-
+        
+        $this->addFlash("error", "Vous ne participez pas à cette sortie");
         return $this->redirectToRoute('app_main');
     }
 
