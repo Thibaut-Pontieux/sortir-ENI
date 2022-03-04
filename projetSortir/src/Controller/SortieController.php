@@ -2,16 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Sorties;
-use App\Repository\EtatsRepository;
-use App\Repository\InscriptionRepository;
-use App\Repository\LieuxRepository;
-use App\Repository\ParticipantsRepository;
-use App\Repository\SitesRepository;
+use App\Entity\Inscription;
 use App\Repository\SortieRepository;
-use App\Repository\VillesRepository;
 use App\Entity\Sortie;
 use App\Repository\EtatRepository;
+use App\Repository\InscriptionRepository;
 use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
@@ -41,7 +36,7 @@ class SortieController extends AbstractController
     /**
      * @Route("/sortie/add", name="sortie_add", methods={"POST", "GET"})
      */
-    public function add(EntityManagerInterface $em, SortieRepository $sortieRepo, ErrorsService $errorService, VilleRepository $villeRepo, LieuRepository $lieuRepo, ParticipantRepository $orgaRepo, EtatRepository $etatRepo, SiteRepository $siteRepo, Request $request): Response 
+    public function add(EntityManagerInterface $em, InscriptionRepository $inscriptionRepo, SortieRepository $sortieRepo, ErrorsService $errorService, VilleRepository $villeRepo, LieuRepository $lieuRepo, ParticipantRepository $orgaRepo, EtatRepository $etatRepo, SiteRepository $siteRepo, Request $request): Response 
     {
         //-- initialisation du form
         $villes = $villeRepo->findAll();
@@ -55,6 +50,8 @@ class SortieController extends AbstractController
         if (empty($utilisateur)){
             return $this->redirectToRoute('login');  
         }
+
+        //dump($utilisateur);
 
         //-- gestion POST
         if ($request->isMethod('POST')) {
@@ -77,12 +74,19 @@ class SortieController extends AbstractController
                 $sortie->setParticipant($utilisateur);
                 $sortie->setLieu($lieuRepo->find($obj["lieu"]));
                 $sortie->getLieu()->setVille($villeRepo->find((int) $obj["ville"]));
-                //-- par défaut état = 1 ligne dans la BDD
-                $sortie->setEtat($etatRepo->find(1));
-                //-- par défaut ville organisatrice (-> site) = 1 ligne dans la BDD
-                $sortie->setSite($siteRepo->find(1));
+                //-- état par défaut = crée
+                $sortie->setEtat($etatRepo->findOneBy(array('libelle' => 'Crée')));
+                //-- site = celui de l'organisateur
+                $sortie->setSite($orgaRepo->findOneBy(array('pseudo' => $utilisateur->getUserIdentifier()))->getSite());
+
+                //-- inscrit par défaut = organisateur
+                $inscrit = new Inscription();
+                $inscrit->setDate(new DateTime());
+                $inscrit->setParticipant($utilisateur);
+                $inscrit->setSortie($sortie);
 
                 $em->persist($sortie);
+                $em->persist($inscrit);
                 $em->flush();
         
                 return $this->redirectToRoute('app_main', ["obj" => $obj]);  

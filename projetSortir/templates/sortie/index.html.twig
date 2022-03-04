@@ -11,6 +11,7 @@
             {% if sortie != null %}
                 <ul class="list-group col">
                     <li class="list-group-item"><span class="fw-bold">Nom de la sortie : </span>{{ sortie.nom }}</li>
+                    <li class="list-group-item"><span class="fw-bold">Ville organisatrice : </span>{{ sortie.site.nom }}</li>
                     <li class="list-group-item"><span class="fw-bold">Organisateur : </span>{{ sortie.participant.nom }}</li>
                     <li class="list-group-item"><span class="fw-bold">Etat : </span>{{ sortie.etat.libelle }}</li>
                     <li class="list-group-item"><span class="fw-bold">Date et heure de la sortie : </span>{{ sortie.dateDebut | date("d/m/Y") }}</li>
