@@ -13,3 +13,14 @@
 .flash-error {
     background-color: #c91717;
 }
+
+.image-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+img {
+    /*border: 1px #aaa solid;*/
+    height: auto;
+    width: auto;
+}
