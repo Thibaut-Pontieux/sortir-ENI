@@ -31,7 +31,7 @@ class InscriptionController extends AbstractController
     {
         $i = new Inscription();
         $u = $this->getUser();
-        
+
         if (empty($u))
         {
             $this->addFlash("error", "Veuillez vous authentifier avant d'essayer de vous inscrire à une sortie");
@@ -92,7 +92,7 @@ class InscriptionController extends AbstractController
         
         $user = $participantRepository->find($u);
                 
-        // On vérifie si l'utilisateur n'est pas déjà inscrit à la sortie
+        // On vérifie que l'utilisateur soit bien inscrit à la sortie
         foreach ($user->getInscriptions() as $insc)
         {
             if ($insc->getSortie()->getId() == $idSortie)
