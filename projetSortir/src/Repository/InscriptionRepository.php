@@ -45,6 +45,20 @@ class InscriptionRepository extends ServiceEntityRepository
         }
     }
 
+    public function findInscrits($idSortie)
+    {
+        $em =  $this->getEntityManager();
+        $dql =  "SELECT participant.nom as nom, 
+                        participant.prenom as prenom, 
+                        participant.pseudo as pseudo
+                FROM App\Entity\Inscription inscription 
+                INNER JOIN App\Entity\Participant participant WITH inscription.participant = participant.id
+                AND inscription.sortie = :idSortie";
+        $stmt = $em->createQuery($dql);
+        $stmt->setParameter(':idSortie', $idSortie);
+        return $stmt->getResult();
+    }
+
     // /**
     //  * @return Inscription[] Returns an array of Inscription objects
     //  */
