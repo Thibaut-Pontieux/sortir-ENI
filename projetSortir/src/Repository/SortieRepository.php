@@ -4,11 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Types\BooleanType;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Config\Definition\BooleanNode;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\HttpFoundation\Request;
@@ -141,21 +139,21 @@ class SortieRepository extends ServiceEntityRepository
          * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
          * Si le "inscrit" est egale à "" (est coché), alors on applique une clause WHERE sur inscription (id_sortie et id_participant).
          */
-        /*if($inscrit !== null){
+        if($inscrit !== null){
 
             $res->join("sortie.inscriptions", "inscription")
                 ->andWhere('inscription.participant = :participant')
                 ->setParameter('participant', $this->security->getUser());
-        }*/
+        }
         /*
          * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
          * Si le "nonInscrit" est egale à "" (est coché), alors on applique une clause WHERE sur inscription (id_sortie et id_participant).
          */
-        /*if($nonInscrit !== null){
+        if($nonInscrit !== null){
             $res->join("sortie.inscriptions", "inscription")
                 ->andWhere('inscription.participant != :participant')
                 ->setParameter('participant', $this->security->getUser());
-        }*/
+        }
         /*
          * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
          * Si le "sortiesPassees" est egale à "" (est coché), alors on applique une clause WHERE sur etat.
