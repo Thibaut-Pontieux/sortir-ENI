@@ -19,55 +19,28 @@ class MainController extends AbstractController
     /**
      * @Route("/", name="app_main")
      */
-    public function index(SortieRepository $sortieRepository, SiteRepository $siteRepository, ParticipantRepository $participantRepository): Response
+    public function index(Request $request, SortieRepository $sortieRepository, SiteRepository $siteRepository, ParticipantRepository $participantRepository): Response
     {
         // Si l'utilisateur n'est pas authentifié on le redirige vers la page de connexion
         if ($this->getUser() == null) {
             return $this->redirectToRoute('login');
         }
+        // On récupère la date d'aujourd'hui
+        $date = (new \DateTime('now'))->format('d/m/Y');
 
         // On récupère les sites en base
         $sites = $siteRepository->findAll();
 
         //On récupère toutes les sorties en base
-        $sorties = $sortieRepository->findAllSorties();
-
-        //On récupère les données de l'utilisateur connecté + celles des entités en relation avec Participant
-        $user = $participantRepository->findUser($this->getUser());
-
-        // S'il est authentifié il est alors redirigé vers la page d'accueil
-        return $this->render('main/index.html.twig', [
-            'controller_name' => 'MainController',
-            'sorties' => $sorties,
-            'sites' => $sites,
-            'user' => $user,
-        ]);
-    }
-
-    /**
-     * @Route("/filtered", name="filtered")
-     */
-    public function filtered(Request $request, SortieRepository $sortieRepository, SiteRepository $siteRepository, ParticipantRepository $participantRepository): Response
-    {
-        // Si l'utilisateur n'est pas authentifié on le redirige vers la page de connexion
-        if ($this->getUser() == null) {
-            return $this->redirectToRoute('login');
-        }
-        // S'il est authentifié il est alors redirigé vers la page d'accueil
-
-        // On récupère les résultats de la requête du formulaire
-        $req = $request->query->all();
-
-        // On récupère les sites en base
-        $sites = $siteRepository->findAll();
-
-        //On récupère les données de l'utilisateur connecté + celles des entités en relation avec Participant
-        $user = $participantRepository->findUser($this->getUser());
-
-        //On récupère les sorties en fonction de de la requête
         $sorties = $sortieRepository->findFilteredSorties($request);
+
+        //On récupère les données de l'utilisateur connecté + celles des entités en relation avec Participant
+        $user = $participantRepository->findUser($this->getUser());
+
+        // S'il est authentifié il est alors redirigé vers la page d'accueil
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
+            'currentDate' => $date,
             'sorties' => $sorties,
             'sites' => $sites,
             'user' => $user,

@@ -16,16 +16,17 @@
             <div class="col-9"></div>
             <div class="col-3">
                 <p>
-                    <b><label>Date du jour :</label><span> Date</span></b>
+                    <b><label>Date du jour :</label><span> {{ currentDate }}</span></b>
                 </p>
                 <p>
                     <b><label>Participant : </label><span> {{ app.user.nom }} {{ app.user.prenom}}</span></b>
                 </p>
             </div>
         </div>
+        <hr>
         {# Deuxième ligne: Filtrer les sorties #}
         <h2>Filtrer les sorties</h2>
-        <form class="row align-items-center" method="get" action="{{ path('filtered') }}">
+        <form class="row align-items-center" method="get" action="{{ path('app_main') }}">
             {# Colonne 1 : Select site #}
             <div class="col-6">
                 <div class="row align-items-center">
@@ -149,7 +150,7 @@
                         {% else %}
                             <td style="color: #cf3636; text-align: center; font-size: x-large">X</td>
                         {% endif %}
-                        <td><a href="#">{{ s.participant.nom }}</a></td>
+                        <td><a href="{{  path('participant', { 'pseudo': s.participant.pseudo }) }}">{{ s.participant.pseudo }}</a></td>
                         <td>
                             {# Cas 1 : Si on est "consulteur" ou "créateur" #}
                             <a href="{{ path('sortie', {'id':s.id }) }}">Afficher</a>
