@@ -34,7 +34,9 @@ class MainController extends AbstractController
         //On récupère toutes les sorties en base
         $sorties = $sortieRepository->findFilteredSorties($request);
 
+        //On récupère les données de l'utilisateur connecté + celles des entités en relation avec Participant
         $user = $participantRepository->findUser($this->getUser());
+
         // S'il est authentifié il est alors redirigé vers la page d'accueil
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',

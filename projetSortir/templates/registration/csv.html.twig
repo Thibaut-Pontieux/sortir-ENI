@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block mainTitle %}Inscription avec un fichier CSV!{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        
+    {{ form_start(form) }}
+
+        {{ form_row(form.submitFile) }}
+
+        <button type="submit" class="btn btn-dark">Inscrire</button>
+        
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}
