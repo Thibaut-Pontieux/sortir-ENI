@@ -4,12 +4,12 @@ namespace App\Repository;
 
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Types\BooleanType;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Config\Definition\BooleanNode;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\HttpFoundation\Request;
 use DateTime;
 use function Doctrine\ORM\QueryBuilder;
 
@@ -21,9 +21,10 @@ use function Doctrine\ORM\QueryBuilder;
  */
 class SortieRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Sortie::class);
+        $this->security = $security;
     }
 
     /**
@@ -86,33 +87,12 @@ class SortieRepository extends ServiceEntityRepository
     //  */
    public function findAllSorties()
     {
-        /*$em =  $this->getEntityManager();
-        $dql = "SELECT sorties.id,
-                        sorties.nom, 
-                        sorties.date_debut, 
-                        sorties.duree, 
-                        sorties.date_cloture_inscription, 
-                        sorties.nb_inscriptions_max, 
-                        sorties.description_infos, 
-                        sorties.url_photo, 
-                        participants.nom as organisateur, 
-                        lieux.nom as lieu, 
-                        etats.libelle as etat, 
-                        sites.nom as site 
-                FROM App\Entity\Sortie sorties 
-                INNER JOIN App\Entity\Participant participants WITH sorties.id_organisateur = participants.id 
-                INNER JOIN App\Entity\Lieu lieux WITH sorties.id_lieu = lieux.id 
-                INNER JOIN App\Entity\Etat etats WITH sorties.id_etat = etats.id 
-                INNER JOIN App\Entity\Site sites WITH sorties.id_site = sites.id";
-        $stmt = $em->createQuery($dql);
-        return $stmt->getResult();*/
-
-        $res = $this->createQueryBuilder('s')
-            ->join('s.participant', 'organisateur' )
-            ->join('s.lieu', 'lieu' )
-            ->join('s.etat', 'etat' )
-            ->join('s.site', 'site' )
-            ->leftJoin('s.inscriptions', 'inscriptions')
+        $res = $this->createQueryBuilder('sortie')
+            ->join('sortie.participant', 'organisateur' )
+            ->join('sortie.lieu', 'lieu' )
+            ->join('sortie.etat', 'etat' )
+            ->join('sortie.site', 'site' )
+            ->leftJoin('sortie.inscriptions', 'inscriptions')
             ->addSelect('organisateur')
             ->addSelect('lieu')
             ->addSelect('etat')
@@ -125,61 +105,98 @@ class SortieRepository extends ServiceEntityRepository
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects filtered by what user ask
     //  */
-    public function findFilteredSorties(
-        int $site,
-        string $sortie,
-        string $dateDebut,
-        string $dateFin
-        //?BooleanType $organisateur,
-        //?BooleanNode $inscrit,
-        //?BooleanNode $nonInscrit,
-        //?BooleanNode $sortiesPassees
-    ){
-        $res = $this->createQueryBuilder('s')
-                    ->join('s.participant', 'organisateur' )
-                    ->join('s.lieu', 'lieu' )
-                    ->join('s.etat', 'etat' )
-                    ->join('s.site', 'site' )
-                    ->addSelect('organisateur')
-                    ->addSelect('lieu')
-                    ->addSelect('etat')
-                    ->addSelect('site');
+    public function findFilteredSorties(Request $request){
+        $site = $request->get("siteSelect");
+        $sortie = $request->get("nomSortie");
+        $dateDebut = $request->get("dateDebut");
+        $dateFin = $request->get("dateFin");
+        $organisateur = $request->get("sortiesOrganisateur");
+        $inscrit = $request->get("sortiesInscrit");
+        $nonInscrit = $request->get("sortiesNonInscrit");
+        $sortiesPassees = $request->get("sortiesPassees");
 
-        if($site !== 0){
-            $res->andWhere('s.id_site = :site')
-                ->setParameter('site', $site);
+        $res = $this->createQueryBuilder('sortie')
+                    ->join('sortie.participant', 'organisateur' )
+                    ->join('sortie.lieu', 'lieu' )
+                    ->join('sortie.etat', 'etat' )
+                    ->join('sortie.site', 'site' );
+        dump($res->getQuery()->getResult());
+
+        /*
+         * Champ obligatoire avec par defaut "Tous"
+         * Si le "siteSelect" est différent de "Tous" (0), alors on applique une clause WHERE sur site.
+         */
+        if($site !== "0"){
+            $res->andWhere('site.id = :site')
+                ->setParameter('site', (int)$site);
         }
-        if ($sortie !== "") {
-            $res->andWhere('s.nom like :sortie')
+        /*
+         * Champ facultatif. Si l'utilisateur n'a rien saisit, la valeur sera "".
+         * Si le "nomSortie" est différent de "", alors on applique une clause WHERE ... LIKE sur sortie.
+         */
+        if (!empty(trim($sortie))) {
+            $res->andWhere('sortie.nom like :sortie')
                 ->setParameter('sortie', "%".$sortie."%");
         }
+        /*
+         * Champ facultatif. Si l'utilisateur n'a rien saisit, la valeur sera "".
+         * Si le "dateDebut" est différent de "" (est vide), alors on applique une clause WHERE sur dateDebut.
+         */
         if(!empty($dateDebut)){
-            $res->andWhere('s.dateDebut >= :dateDebut')
+            $res->andWhere('sortie.dateDebut >= :dateDebut')
                 ->setParameter('dateDebut', new DateTime($dateDebut));
         }
+        /*
+         * Champ facultatif. Si l'utilisateur n'a rien saisit, la valeur sera "".
+         * Si le "dateFin" est différent de "" (est vide), alors on applique une clause WHERE sur dateFin.
+         */
         if(!empty($dateFin)){
-            $res->andWhere('s.dateDebut <= :dateFin')
+            $res->andWhere('sortie.dateDebut <= :dateFin')
                 ->setParameter('dateFin', new Datetime($dateFin));
-        }/*
-        if(organisateur ==""){
-            $res->andWhere('s.id_organisateur = :organisateur')
-                ->setParameter('organisateur', 1);
         }
-        if(inscrit == ""){
-            $res->andWhere('s.?? = :inscrit')
-                ->setParameter('inscrit', 1);
+
+        /*
+         * FILTRE CHECKBOX
+         */
+        /*
+         * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
+         * Si le "organisateur" est egale à "" (est coché), alors on applique une clause WHERE sur id_organisateur.
+         */
+        if($organisateur !== null){
+            $res->andWhere('organisateur = :organisateur')
+                ->setParameter('organisateur', $this->security->getUser());
         }
-        if(nonInscrit == ""){
-            $res->andWhere('s.?? = :nonInscrit')
-                ->setParameter('nonInscrit', 1);
+        /*
+         * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
+         * Si le "inscrit" est egale à "" (est coché), alors on applique une clause WHERE sur inscription (id_sortie et id_participant).
+         */
+        if($inscrit !== null){
+
+            $res->join("sortie.inscriptions", "inscription")
+                ->andWhere('inscription.participant = :participant')
+                ->setParameter('participant', $this->security->getUser());
         }
-        if(sortiePassees ==""){
-            $res->andWhere('s.sortiePassees = :sortiePassees')
-                ->setParameter('sortiePassees', 1);
-        }*/
-        
+        /*
+         * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
+         * Si le "nonInscrit" est egale à "" (est coché), alors on applique une clause WHERE sur inscription (id_sortie et id_participant).
+         */
+        if($nonInscrit !== null){
+            $res->join("sortie.inscriptions", "inscription")
+                ->andWhere('inscription.participant != :participant')
+                ->setParameter('participant', $this->security->getUser());
+        }
+        /*
+         * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
+         * Si le "sortiesPassees" est egale à "" (est coché), alors on applique une clause WHERE sur etat.
+         */
+        if($sortiesPassees !== null){
+            $res->andWhere('etat.libelle = :sortiePassees')
+                ->setParameter('sortiePassees', "Passée");
+        }
+
+        dump($res->getQuery()->getResult());
         return $res->getQuery()
-                    ->getResult();
+                   ->getResult();
     }
 
     // /**

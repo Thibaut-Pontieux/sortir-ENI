@@ -25,13 +25,13 @@ class MainController extends AbstractController
         if ($this->getUser() == null) {
             return $this->redirectToRoute('login');
         }
-        
+
         // On récupère les sites en base
         $sites = $siteRepository->findAll();
-        
+
         //On récupère toutes les sorties en base
         $sorties = $sortieRepository->findAllSorties();
-        
+
         $user = $participantRepository->findUser($this->getUser());
         dump($user);
         dump($sorties);
@@ -60,20 +60,9 @@ class MainController extends AbstractController
 
         // On récupère les sites en base
         $sites = $siteRepository->findAll();
-        
-        //On récupère les sorties en fonction de de la requête
-        $sorties = $sortieRepository->findFilteredSorties(
-        (int)$req["siteSelect"],
-        $req["nomSortie"],
-        $req["dateDebut"],
-        $req["dateFin"]
-        //$req[sortiesOrganisateur],
-        //$req[sortiesInscrit],
-        //$req[sortiesNonInscrit],
-        //$req[sortiesPassees],
 
-        );
-        dump($sorties);
+        //On récupère les sorties en fonction de de la requête
+        $sorties = $sortieRepository->findFilteredSorties($request);
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
             'sorties' => $sorties,

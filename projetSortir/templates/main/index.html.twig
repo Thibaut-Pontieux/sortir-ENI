@@ -19,7 +19,7 @@
                     <b><label>Date du jour :</label><span> Date</span></b>
                 </p>
                 <p>
-                    <b><label>Participant : </label><span>{{ app.user.nom }} {{ app.user.prenom }}</span></b>
+                    <b><label>Participant : </label><span> {{ app.user.nom }} {{ app.user.prenom}}</span></b>
                 </p>
             </div>
         </div>
@@ -72,25 +72,25 @@
             {# Colonne 2 : CheckBox Sortie #}
             <div class="col-4">
                 <div class="form-check">
-                    <input id="sortiesOrganisateur" name="sortiesOrganisateur" type="checkbox" class="form-check-input" value="">
+                    <input id="sortiesOrganisateur" name="sortiesOrganisateur" type="checkbox" class="form-check-input" value="1">
                     <label class="form-check-label" for="sortiesOrganisateur">
                         Sorties dont je suis l'organisateur/trice.
                     </label>
                 </div>
                 <div class="form-check">
-                    <input  id="sortiesInscrit" name="sortiesInscrit" type="checkbox" class="form-check-input" value="">
+                    <input  id="sortiesInscrit" name="sortiesInscrit" type="checkbox" class="form-check-input" value="1">
                     <label class="form-check-label" for="sortiesInscrit">
                         Sorties auxquelles je suis inscrit/e.
                     </label>
                 </div>
                 <div class="form-check">
-                    <input id="sortiesNonInscrit" name="sortiesNonInscrit" type="checkbox" class="form-check-input" value="">
+                    <input id="sortiesNonInscrit" name="sortiesNonInscrit" type="checkbox" class="form-check-input" value="1">
                     <label class="form-check-label" for="sortiesNonInscrit">
                         Sorties auxquelles je ne suis pas inscrit/e.
                     </label>
                 </div>
                 <div class="form-check">
-                    <input id="sortiesPassees" name="sortiesPassees" type="checkbox" class="form-check-input" value="">
+                    <input id="sortiesPassees" name="sortiesPassees" type="checkbox" class="form-check-input" value="1">
                     <label class="form-check-label" for="sortiesPassees">
                         Sorties passées.
                     </label>
@@ -112,7 +112,7 @@
             {% for message in messages %}
                 <div class="flash flash-{{ categorie }}">
                     {{ message }}
-                </div>    
+                </div>
             {% endfor %}
         {% endfor %}
         {# Quatrième ligne : Tableau des sorties #}
