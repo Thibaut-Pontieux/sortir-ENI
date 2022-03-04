@@ -1,0 +1,3 @@
+﻿site_id;pseudo;nom;prenom;telephone;mail;mdp;administrateur;actif;roles
+1;paul;emploi;paul;202020202;paul@mail.fr;azerty30;0;1;[]
+1;sam;emploi;sam;101010101;sam@mail.fr;azerty12;0;1;[]
