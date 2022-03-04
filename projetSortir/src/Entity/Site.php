@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\SitesRepository;
+use App\Repository\SiteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=SitesRepository::class)
+ * @ORM\Entity(repositoryClass=SiteRepository::class)
  */
-class Sites
+class Site
 {
     /**
      * @ORM\Id
@@ -25,12 +25,12 @@ class Sites
     private $nom;
 
     /**
-     * @ORM\OneToMany(targetEntity=Participants::class, mappedBy="id_site", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Participant::class, mappedBy="site", orphanRemoval=true)
      */
     private $participants;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sorties::class, mappedBy="id_site", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="site", orphanRemoval=true)
      */
     private $sorties;
 
@@ -58,29 +58,29 @@ class Sites
     }
 
     /**
-     * @return Collection<int, Participants>
+     * @return Collection<int, Participant>
      */
     public function getParticipants(): Collection
     {
         return $this->participants;
     }
 
-    public function addParticipant(Participants $participant): self
+    public function addParticipant(Participant $participant): self
     {
         if (!$this->participants->contains($participant)) {
             $this->participants[] = $participant;
-            $participant->setIdSite($this);
+            $participant->setSite($this);
         }
 
         return $this;
     }
 
-    public function removeParticipant(Participants $participant): self
+    public function removeParticipant(Participant $participant): self
     {
         if ($this->participants->removeElement($participant)) {
             // set the owning side to null (unless already changed)
-            if ($participant->getIdSite() === $this) {
-                $participant->setIdSite(null);
+            if ($participant->getSite() === $this) {
+                $participant->setSite(null);
             }
         }
 
@@ -88,29 +88,29 @@ class Sites
     }
 
     /**
-     * @return Collection<int, Sorties>
+     * @return Collection<int, Sortie>
      */
     public function getSorties(): Collection
     {
         return $this->sorties;
     }
 
-    public function addSortie(Sorties $sortie): self
+    public function addSortie(Sortie $sortie): self
     {
         if (!$this->sorties->contains($sortie)) {
             $this->sorties[] = $sortie;
-            $sortie->setIdSite($this);
+            $sortie->setSite($this);
         }
 
         return $this;
     }
 
-    public function removeSortie(Sorties $sortie): self
+    public function removeSortie(Sortie $sortie): self
     {
         if ($this->sorties->removeElement($sortie)) {
             // set the owning side to null (unless already changed)
-            if ($sortie->getIdSite() === $this) {
-                $sortie->setIdSite(null);
+            if ($sortie->getSite() === $this) {
+                $sortie->setSite(null);
             }
         }
 
