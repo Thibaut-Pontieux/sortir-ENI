@@ -125,7 +125,7 @@
                         <th scope="col">Clôture</th>
                         <th scope="col">Inscrits/Places</th>
                         <th scope="col">Etat</th>
-                        <th scope="col">Inscrits</th>
+                        <th scope="col">Inscrit</th>
                         <th scope="col">Organisateur</th>
                         <th scope="col">Actions</th>
                     </tr>
@@ -144,7 +144,11 @@
                         <td>{{ s.dateClotureInscription | date('d/m/Y')}}</td>
                         <td>X/{{ s.nbInscriptionsMax }}</td>
                         <td>{{ s.etat.libelle }}</td>
-                        <td>{% if inscrit %}X{% endif %}</td>
+                        {% if inscrit %}
+                            <td style="color: #36cf3b; text-align: center; font-size: x-large">✓</td>
+                        {% else %}
+                            <td style="color: #cf3636; text-align: center; font-size: x-large">X</td>
+                        {% endif %}
                         <td><a href="#">{{ s.participant.nom }}</a></td>
                         <td>
                             {# Cas 1 : Si on est "consulteur" ou "créateur" #}

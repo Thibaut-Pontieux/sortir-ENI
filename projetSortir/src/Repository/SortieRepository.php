@@ -51,37 +51,6 @@ class SortieRepository extends ServiceEntityRepository
         }
     }
 
-    public function findSortie($id)
-    {
-        $em =  $this->getEntityManager();
-        $dql =  "SELECT sortie.id,
-                        sortie.nom, 
-                        sortie.dateDebut, 
-                        sortie.duree, 
-                        sortie.dateClotureInscription, 
-                        sortie.nbInscriptionsMax, 
-                        sortie.descriptionInfos, 
-                        sortie.urlPhoto, 
-                        participant.nom as organisateur, 
-                        lieu.nom as lieu,
-                        lieu.rue as rue,
-                        lieu.latitude as latitude,
-                        lieu.longitude as longitude,
-                        ville.nom as ville,
-                        ville.cp as cp, 
-                        etat.libelle as etat, 
-                        site.nom as site 
-                FROM App\Entity\Sortie sortie
-                INNER JOIN App\Entity\Participant participant WITH sortie.participant = participant.id 
-                INNER JOIN App\Entity\Lieu lieu WITH sortie.lieu = lieu.id 
-                INNER JOIN App\Entity\Etat etat WITH sortie.etat = etat.id 
-                INNER JOIN App\Entity\Site site WITH sortie.site = site.id
-                INNER JOIN App\Entity\Ville ville WITH lieu.ville = ville.id AND sortie.id = :id";
-        $stmt = $em->createQuery($dql);
-        $stmt->setParameter(':id', $id);
-        return $stmt->getResult();
-    }
-
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects with ID transformed into name
     //  */
@@ -97,7 +66,8 @@ class SortieRepository extends ServiceEntityRepository
             ->addSelect('lieu')
             ->addSelect('etat')
             ->addSelect('site')
-            ->addSelect('inscriptions');
+            ->addSelect('inscriptions')
+            ->andWhere('sortie.dateDebut >= DATE_SUB(CURRENT_DATE(), 1, \'month\') ');
         return $res->getQuery()
                    ->getResult();
     }

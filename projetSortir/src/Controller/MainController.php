@@ -32,9 +32,9 @@ class MainController extends AbstractController
         //On récupère toutes les sorties en base
         $sorties = $sortieRepository->findAllSorties();
 
+        //On récupère les données de l'utilisateur connecté + celles des entités en relation avec Participant
         $user = $participantRepository->findUser($this->getUser());
-        dump($user);
-        dump($sorties);
+
         // S'il est authentifié il est alors redirigé vers la page d'accueil
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
@@ -47,7 +47,7 @@ class MainController extends AbstractController
     /**
      * @Route("/filtered", name="filtered")
      */
-    public function filtered(Request $request, SortieRepository $sortieRepository, SiteRepository $siteRepository): Response
+    public function filtered(Request $request, SortieRepository $sortieRepository, SiteRepository $siteRepository, ParticipantRepository $participantRepository): Response
     {
         // Si l'utilisateur n'est pas authentifié on le redirige vers la page de connexion
         if ($this->getUser() == null) {
@@ -61,12 +61,16 @@ class MainController extends AbstractController
         // On récupère les sites en base
         $sites = $siteRepository->findAll();
 
+        //On récupère les données de l'utilisateur connecté + celles des entités en relation avec Participant
+        $user = $participantRepository->findUser($this->getUser());
+
         //On récupère les sorties en fonction de de la requête
         $sorties = $sortieRepository->findFilteredSorties($request);
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
             'sorties' => $sorties,
             'sites' => $sites,
+            'user' => $user,
         ]);
     }
 }
