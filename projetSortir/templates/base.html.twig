@@ -27,6 +27,7 @@
             {# Nav #}
             {%  include "inc/nav.html.twig" %}
         </header>
+
         {# Title #}
         <h1>{% block mainTitle %}{% endblock %}</h1>
 
@@ -34,7 +35,7 @@
         {% block body %}{% endblock %}
 
         {# Footer #}
-        <footer class="footer py-3 bg-light fixed-bottom text-center">
+        <footer class="footer py-3 bg-light">
             &copy; Sortir.com {{ date() | date("Y") }}
         </footer>
     </body>

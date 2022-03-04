@@ -1,15 +1,7 @@
-.flash {
-    margin: 20px;
-    padding: 10px;
-    border-radius: 10px;
-    color: #FFFFFF;
+footer {
+    width: 100%;
     text-align: center;
-}
-
-.flash-success {
-    background-color: #259125;
-}
-
-.flash-error {
-    background-color: #c91717;
+    display: block;
+    bottom: 0;
+    position: absolute;
 }
