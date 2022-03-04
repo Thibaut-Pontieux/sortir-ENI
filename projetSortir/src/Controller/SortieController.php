@@ -2,14 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Sorties;
-use App\Repository\EtatsRepository;
-use App\Repository\InscriptionRepository;
-use App\Repository\LieuxRepository;
-use App\Repository\ParticipantsRepository;
-use App\Repository\SitesRepository;
 use App\Repository\SortieRepository;
-use App\Repository\VillesRepository;
 use App\Entity\Sortie;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
@@ -56,6 +49,8 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('login');  
         }
 
+        //dump($utilisateur);
+
         //-- gestion POST
         if ($request->isMethod('POST')) {
             
@@ -77,10 +72,10 @@ class SortieController extends AbstractController
                 $sortie->setParticipant($utilisateur);
                 $sortie->setLieu($lieuRepo->find($obj["lieu"]));
                 $sortie->getLieu()->setVille($villeRepo->find((int) $obj["ville"]));
-                //-- par défaut état = 1 ligne dans la BDD
-                $sortie->setEtat($etatRepo->find(1));
-                //-- par défaut ville organisatrice (-> site) = 1 ligne dans la BDD
-                $sortie->setSite($siteRepo->find(1));
+                //-- état par défaut = crée
+                $sortie->setEtat($etatRepo->findOneBy(array('libelle' => 'Crée')));
+                //-- site = celui de l'organisateur
+                $sortie->setSite($orgaRepo->findOneBy(array('pseudo' => $utilisateur->getUserIdentifier()))->getSite());
 
                 $em->persist($sortie);
                 $em->flush();
