@@ -89,7 +89,9 @@ class SortieController extends AbstractController
                 $em->persist($inscrit);
                 $em->flush();
         
-                return $this->redirectToRoute('app_main', ["obj" => $obj]);  
+                $this->addFlash("success", "Sortie crée avec succès");
+
+                return $this->redirectToRoute('app_main');  
             }
 
         }
@@ -154,10 +156,13 @@ class SortieController extends AbstractController
                 $sortie->getLieu()->setVille($villeRepo->find((int) $obj["ville"]));
 
                 $em->flush();
+
+                $this->addFlash("success", "Sortie modifiée avec succès");
         
-                return $this->redirectToRoute('app_main', ["obj" => $obj]);  
+                return $this->redirectToRoute('app_main');  
             }
         }
+        
          
         return $this->render('sortie/form.html.twig', [
             'villes'=> $villes,
@@ -181,14 +186,15 @@ class SortieController extends AbstractController
                 $etat = $etatRepo->findOneBy(array('libelle' => 'Annulée'));
                 $sortie->setEtat($etat);
                 $em->flush();
-            }
             
-            // TODO: gérer les messages flash
+                $this->addFlash("success", "Sortie annulée avec succès");
+   
+            } else {
+                $this->addFlash("error", "Une erreur est survenue lors de l'annulation de la sortie");
+            }   
         }
         
-        return $this->render('sortie/index.html.twig', [
-            'sortie' => $sortie,
-        ]);
+        return $this->redirectToRoute('app_main');  
     }
 }
 
