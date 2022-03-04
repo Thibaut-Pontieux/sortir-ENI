@@ -148,7 +148,7 @@
                         <td><a href="#">{{ s.participant.nom }}</a></td>
                         <td>
                             {# Cas 1 : Si on est "consulteur" ou "créateur" #}
-                            <a href="#">Afficher</a>
+                            <a href="{{ path('sortie', {'id':s.id }) }}">Afficher</a>
                             {% if inscrit %}
                                 <a href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
                             {% else %}
