@@ -33,7 +33,7 @@
                 Se souvenir de moi
             </label>
             <div>
-                <a href="#">Mot de passe oublié ?</a>
+                <a href="{{ path('reset') }}">Mot de passe oublié ?</a>
             </div>
         </div>
     {% for categorie, messages in app.flashes %}
