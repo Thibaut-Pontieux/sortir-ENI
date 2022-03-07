@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/accueil.css') }}">
+{% endblock %}
+
+{% block title %}Gestion villes{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <h2>Gestion des villes</h2>
+        <hr>
+        <h3>Filtrer les villes</h3>
+        {# Formulaire pour le filtre #}
+        <form class="row align-items-center" method="get" action="{{ path('gestion_sites') }}">
+            {# Recherche "Nom de la ville" #}
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="input-group">
+                        <label for="nomVille" class="col-form-label input-group-text">🔍</label>
+                        <input id="nomVille" name="nomVille" type="text" class="form-control">
+                    </div>
+                </div>
+                {# Bouton "Rechercher" #}
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <h3>Ajouter une ville</h3>
+        {# Formulaire pour ajouter une ville #}
+        <form class="row align-items-center" method="post" action="{{ path('gestion_sites') }}">
+            <div class="col-auto">
+                <div class="input-group">
+                    <label for="nomVille" class="col-form-label input-group-text">Nom</label>
+                    <input id="nomVille" name="nomVille" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="input-group">
+                    <label for="cpVille" class="col-form-label input-group-text">Code postal</label>
+                    <input id="cpVille" name="cpVille" type="text" class="form-control">
+                </div>
+            </div>
+            {# Bouton "Ajouter une ville" #}
+            <div class="col-auto">
+                <div class="col text-left">
+                    <a href="{{ path('app_main')}}"><input type="button" value="Ajouter une ville" class="btn btn-primary md-3"/></a>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <div id="table" class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar table-hover table-responsive container-fluid">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Ville</th>
+                        <th scope="col">Code postal</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in villes %}
+                        <tr>
+                            <td>{{ v.nom }}</td>
+                            <td>{{ v.cp }}</td>
+                            <td>
+                                <div class="row">
+                                        <div class="col-auto">
+                                            <a href="{{ path('app_main')}}">Modifier</a>
+                                        </div>
+                                        -
+                                        <div class="col-auto">
+                                            <a href="{{ path('app_main')}}">Supprimer</a>
+                                        </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

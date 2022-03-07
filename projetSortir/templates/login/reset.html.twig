@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ré-initialiser{% endblock %}
+
+{% block mainTitle %}Ré-initialiser le mot de passe{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        {% for categorie, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash flash-{{ categorie }}">
+                    {{ message }}
+                </div>    
+            {% endfor %}
+        {% endfor %}
+
+        <form action="{{ path('reset') }}" method="post" class="row">
+            <div class="mb-3">
+                <label for="reset_pseudo" class="form-label">Pseudo :</label>
+                <input type="text" class="form-control" value="{{(pseudo ? pseudo : "")}}" name="reset_pseudo" >
+            </div>
+            <div class="mb-3">
+                <label for="reset_m" class="form-label">Mail :</label>
+                <input type="mail" value="{{(mail ? mail : "")}}" class="form-control" name="reset_m" >
+            </div>
+            <div class="mb-3">
+                <label for="reset_p1" class="form-label">Nouveau mot de passe :</label>
+                <input type="password" class="form-control" name="reset_p1" >
+            </div>
+            <div class="mb-3">
+                <label for="reset_p2" class="form-label">Confirmer le nouveau mot de passe :</label>
+                <input type="password" class="form-control" name="reset_p2" >
+            </div>
+            <div class="col text-center">
+                <button class="btn btn-primary btn-lg" type="submit">Enregistrer</button>
+            </div>
+            <div class="col text-center">
+                <a href="{{ path('login') }}" class="btn btn-danger btn-lg" role="button">Retour</a>
+            </div>
+        </form>
+       
+{% endblock %}

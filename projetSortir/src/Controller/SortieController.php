@@ -181,19 +181,26 @@ class SortieController extends AbstractController
         $sortie = $sortieRepo->find($id);
 
         if (!empty($sortie)){
+
+            dump($sortie->getParticipant()->getRoles());
+
             //-- si la sortie n'est pas commencée et que je suis l'organisateur, je peux l'annuler
-            if ($sortie->getDateDebut() > new DateTime() && $sortie->getParticipant() == $this->getUser()){
-                $etat = $etatRepo->findOneBy(array('libelle' => 'Annulée'));
-                $sortie->setEtat($etat);
-                $em->flush();
+            if ($sortie->getDateDebut() > new DateTime()){
+                if ($sortie->getParticipant() == $this->getUser() || in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+                    $etat = $etatRepo->findOneBy(array('libelle' => 'Annulée'));
+                    $sortie->setEtat($etat);
+                    $em->flush();
             
                 $this->addFlash("success", "Sortie annulée avec succès");
-   
+                } else {
+                    $this->addFlash("error", "Vous n'êtes autoriser à annuler cette sortie");
+                }
             } else {
+                // $this->addFlash("error", sprintf("Vous ne pouvez pas annuler cette sortie, celle ci est %s" , $sortie->getEtat()->getLibelle()));
                 $this->addFlash("error", "Une erreur est survenue lors de l'annulation de la sortie");
-            }   
-        }
-        
+            }
+        } 
+                
         return $this->redirectToRoute('app_main');  
     }
 }
