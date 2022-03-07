@@ -1,20 +1,78 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello GestionSitesController!{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/accueil.css') }}">
+{% endblock %}
+
+{% block title %}Gestion sites{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/xampp/htdocs/sortir-ENI.git/projetSortir/src/Controller/GestionSitesController.php'|file_link(0) }}">src/Controller/GestionSitesController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/xampp/htdocs/sortir-ENI.git/projetSortir/templates/gestion_sites/index.html.twig'|file_link(0) }}">templates/gestion_sites/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <div class="container-fluid">
+        <h2>Gestion des sites</h2>
+        <hr>
+        <h3>Filtrer les sites</h3>
+        {# Formulaire pour le filtre #}
+        <form class="row align-items-center" method="get" action="{{ path('gestion_sites') }}">
+            {# Recherche "Nom du site" #}
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="input-group">
+                        <label for="nomSite" class="col-form-label input-group-text">🔍</label>
+                        <input id="nomSite" name="nomSite" type="text" class="form-control">
+                    </div>
+                </div>
+                {# Bouton "Rechercher" #}
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <h3>Ajouter un site</h3>
+        {# Formulaire pour ajouter une ville #}
+        <form class="row align-items-center" method="post" action="{{ path('gestion_villes') }}">
+            <div class="col-auto">
+                <div class="input-group">
+                    <label for="nomSite" class="col-form-label input-group-text">Nom</label>
+                    <input id="nomSite" name="nomSite" type="text" class="form-control">
+                </div>
+            </div>
+            {# Bouton "Ajouter une ville" #}
+            <div class="col-auto">
+                <div class="col text-left">
+                    <a href="{{ path('app_main')}}"><input type="button" value="Ajouter un site" class="btn btn-primary md-3"/></a>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <div id="table" class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar table-hover table-responsive container-fluid">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Sites</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for s in sites %}
+                    <tr>
+                        <td>{{ s.nom }}</td>
+                        <td>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <a href="{{ path('app_main')}}">Modifier</a>
+                                </div>
+                                -
+                                <div class="col-auto">
+                                    <a href="{{ path('app_main')}}">Supprimer</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}
