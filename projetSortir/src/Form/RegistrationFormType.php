@@ -19,16 +19,16 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('pseudo')
             ->add('plainPassword', PasswordType::class, [
-                // On encore le MDP dans le controller
+                // On encode le MDP dans le controller
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Veuillez saisir un mot de passe',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
