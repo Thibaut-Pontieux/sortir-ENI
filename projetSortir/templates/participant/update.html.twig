@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier son profil{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 style="text-align: center">Modification</h1>
+        <hr>
+        <div class="row">
+            {{ form_start(profileForm) }}
+                {{ form_row(profileForm.pseudo) }}
+                {{ form_row(profileForm.nom) }}
+                {{ form_row(profileForm.prenom) }}
+                {{ form_row(profileForm.telephone) }}
+                {{ form_row(profileForm.mail) }}
+                {{ form_row(profileForm.site) }}
+                <div class="row">
+                    <div class="col text-center">
+                        <button class="btn btn-primary btn-lg" type="submit">Modifier</button>
+                    </div>
+                    <div class="col text-center">
+                        <a href="{{ path('app_main') }}" class="btn btn-danger btn-lg" role="button">Retour</a>
+                    </div>
+                </div>
+            {{ form_end(profileForm) }}
+        </div>
+    </div>
+{% endblock %}
