@@ -57,6 +57,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Ville</th>
+                        <th scope="col">Code postal</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -64,6 +65,7 @@
                     {% for v in villes %}
                         <tr>
                             <td>{{ v.nom }}</td>
+                            <td>{{ v.cp }}</td>
                             <td>
                                 <div class="row">
                                         <div class="col-auto">
