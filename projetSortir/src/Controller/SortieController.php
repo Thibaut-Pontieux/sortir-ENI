@@ -126,8 +126,8 @@ class SortieController extends AbstractController
 
         //-- obj = sortie à modifier
         $obj["nom-sortie"] = $sortie->getNom();
-        $obj["date-debut"] = $sortie->getDateDebut()->format('Y-m-d H:i:s');
-        $obj["date-cloture"] = $sortie->getDateClotureInscription()->format('Y-m-d H:i:s');
+        $obj["date-debut"] = $sortie->getDateDebut();
+        $obj["date-cloture"] = $sortie->getDateClotureInscription();
         $obj["nb-places"] = $sortie->getNbInscriptionsMax();
         $obj["duree"] = $sortie->getDuree();
         $obj["description"] = $sortie->getDescriptionInfos();

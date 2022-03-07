@@ -23,11 +23,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="date-debut" class="form-label">Date et heure de la sortie</label>
-                    <input type="datetime-local" value="{{(obj ? obj["date-debut"] : "")}}" class="form-control" name="date-debut">
+                    <input type="datetime-local" value="{{(obj ? obj["date-debut"] | date('Y-m-d\\TH:i:s') : "")}}" class="form-control" name="date-debut">
                 </div>
                 <div class="mb-3">
                     <label for="date-cloture" class="form-label">Date limite d'inscription</label>
-                    <input type="datetime-local" value="{{(obj ? obj["date-cloture"] : "")}}" class="form-control" name="date-cloture">
+                    <input type="datetime-local" value="{{(obj ? obj["date-cloture"] | date('Y-m-d\\TH:i:s') : "")}}" class="form-control" name="date-cloture">
                 </div>
                 <div class="mb-3">
                     <label for="nb-places" class="form-label">Nombre de places</label>

@@ -153,20 +153,18 @@
                         <td><a href="{{  path('participant', { 'pseudo': s.participant.pseudo }) }}">{{ s.participant.pseudo }}</a></td>
                         <td>
                             {# Cas 1 : Si on est "consulteur" ou "créateur" #}
-                            <a href="{{ path('sortie', {'id':s.id }) }}">Afficher</a>
-                            {% if inscrit %}
-                                <a href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
+                            {% if user == s.participant %}
+                                <a href="{{ path('sortie_modify', {'id':s.id }) }}">Modifier</a>
+                                <a href="#">Publier</a>
+                                <a href="{{ path('sortie_cancel', {'id':s.id }) }}">Annuler</a>
                             {% else %}
-                                <a href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
+                                <a href="{{ path('sortie', {'id':s.id }) }}">Afficher</a>
+                                {% if inscrit %}
+                                    <a href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
+                                {% else %}
+                                    <a href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
+                                {% endif %}
                             {% endif %}
-                            {# Cas 2 : Si on est "créateur" #}
-                            {# Si "En création" #}
-                            {#
-                            <a href="#">Modifier</a>
-                            <a href="#">Publier</a>
-                            #}
-                            {# Si "Ouvert" #}
-                            {# <a href="#">Annuler</a> #}
                         </td>
                     </tr>
                 {% endfor %}
