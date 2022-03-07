@@ -106,7 +106,7 @@
         {# Troisième ligne : Bouton créer une sortie #}
         <div id="ligneBoutonCreerSortie" class="row align-items-center">
             <div class="col-auto">
-                <button type="button" class="btn btn-primary">Créer une sortie</button>
+                <a href="{{ path('sortie_add') }}" class="btn btn-primary btn" role="button">Créer une sortie</a>
             </div>
         </div>
         {% for categorie, messages in app.flashes %}
