@@ -6,8 +6,10 @@ use App\Entity\Participant;
 use App\Entity\Site;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 
 class ProfileType extends AbstractType
 {
@@ -18,7 +20,12 @@ class ProfileType extends AbstractType
             ->add('nom')
             ->add('prenom')
             ->add('telephone')
-            ->add('mail')
+            ->add('mail', null, [
+                'attr' => [
+                    'pattern' => '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$',
+                    'title' => 'Le mail n\'est pas valide',
+                ]
+            ])
             ->add('site', EntityType::class, ['choice_label' => 'nom', 'class' => Site::class, 'label' => 'Site'])
         ;
     }
