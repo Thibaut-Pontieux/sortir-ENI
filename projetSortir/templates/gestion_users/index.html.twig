@@ -1,20 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello GestionUsersController!{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/accueil.css') }}">
+{% endblock %}
+
+{% block title %}Gestion Utilisateurs{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/xampp/htdocs/sortir-ENI.git/projetSortir/src/Controller/GestionUsersController.php'|file_link(0) }}">src/Controller/GestionUsersController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/xampp/htdocs/sortir-ENI.git/projetSortir/templates/gestion_users/index.html.twig'|file_link(0) }}">templates/gestion_users/index.html.twig</a></code></li>
-    </ul>
+<div class="container-fluid">
+    <h2>Gestion des utilisateurs</h2>
+    <div id="table" class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar table-hover table-responsive container-fluid">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Pseudo</th>
+                    <th scope="col">Nom - Prénom</th>
+                    <th scope="col">Rôles</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for u in users %}
+                <tr>
+                    <td><a href="{{  path('participant', { 'pseudo': u.pseudo }) }}">{{ u.pseudo }}</a></td>
+                    <td>{{ u.nom }} {{ u.prenom }}</td>
+                    <td>{% for role in u.roles %}
+                            {{ role | join(role) }}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <div class="row">
+                            {% if u.administrateur and u.pseudo != "Admin" %}
+                                <div class="col-auto">
+                                    <a href="{{ path('app_main')}}">Add to user</a>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="{{ path('app_main')}}">Delete</a>
+                                </div>
+                            {% elseif not u.administrateur %}
+                                <div class="col-auto">
+                                    <a href="{{ path('app_main')}}">Add to admin</a>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="{{ path('app_main')}}">Delete</a>
+                                </div>
+                            {% else %}
+                                <div class="col-auto">
+                                    On ne supprime pas l'admin des admins...
+                                </div>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
