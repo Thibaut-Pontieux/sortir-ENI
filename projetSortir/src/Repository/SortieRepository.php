@@ -68,7 +68,8 @@ class SortieRepository extends ServiceEntityRepository
                     ->join('sortie.participant', 'organisateur' )
                     ->join('sortie.lieu', 'lieu' )
                     ->join('sortie.etat', 'etat' )
-                    ->join('sortie.site', 'site' );
+                    ->join('sortie.site', 'site' )
+                    ->andWhere('DATE_ADD(sortie.dateDebut, 1, \'month\') >= CURRENT_DATE()');
         if( !(
             ($site == "0" || empty($site)) &&
             empty(trim($sortie)) &&
