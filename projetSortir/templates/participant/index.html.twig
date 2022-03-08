@@ -5,47 +5,49 @@
 {% block stylesheets %} {{ parent() }} {% endblock %}
 
 {% block body %}
-<div class="row">
-    <div class="col-sm-12 col-md-4 image-container">
-        <img src="../../public/images/avatar.svg" class="rounded float-start" alt="Default user picture">
-    </div>
-    <div class="col-sm-12 col-md-4">
-        <h1 style="text-align: center">{{ participant.pseudo }}</h1>
-        <hr>
+    {% if app.user and app.user.actif %}
         <div class="row">
-            <div class="col-4 mb-3">
-                <label>Prénom : </label>
+            <div class="col-sm-12 col-md-4 image-container">
+                <img src="../../public/images/avatar.svg" class="rounded float-start" alt="Default user picture">
             </div>
-            <div class="col-8 mb-3">
-                <input type="text" class="form-control" aria-label="prenom" value="{{ participant.prenom }}" readonly>
-            </div>
-            <div class="col-4 mb-3">
-                <label>Nom : </label>
-            </div>
-            <div class="col-8 mb-3">
-                <input type="text" class="form-control" aria-label="nom" value="{{ participant.nom }}" readonly>
-            </div>
-            <div class="col-4 mb-3">
-                <label>Téléphone : </label>
-            </div>
-            <div class="col-8 mb-3">
-                <input type="text" class="form-control" aria-label="telephone" value="{{ participant.telephone }}" readonly>
-            </div>
-            <div class="col-4 mb-3">
-                <label>Email :</label>
-            </div>
-            <div class="col-8 mb-3">
-                <input type="text" class="form-control" aria-label="mail" value="{{ participant.mail }}" readonly>
-            </div>
-            <div class="col-4 mb-3">
-                <label>site de rattachement :</label>
-            </div>
-            <div class="col-8">
-                <input type="text" class="form-control" aria-label="nomSite" value="{{ participant.site.nom }}" readonly>
+            <div class="col-sm-12 col-md-4">
+                <h1 style="text-align: center">{{ participant.pseudo }}</h1>
+                <hr>
+                <div class="row">
+                    <div class="col-4 mb-3">
+                        <label>Prénom : </label>
+                    </div>
+                    <div class="col-8 mb-3">
+                        <input type="text" class="form-control" aria-label="prenom" value="{{ participant.prenom }}" readonly>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label>Nom : </label>
+                    </div>
+                    <div class="col-8 mb-3">
+                        <input type="text" class="form-control" aria-label="nom" value="{{ participant.nom }}" readonly>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label>Téléphone : </label>
+                    </div>
+                    <div class="col-8 mb-3">
+                        <input type="text" class="form-control" aria-label="telephone" value="{{ participant.telephone }}" readonly>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label>Email :</label>
+                    </div>
+                    <div class="col-8 mb-3">
+                        <input type="text" class="form-control" aria-label="mail" value="{{ participant.mail }}" readonly>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label>site de rattachement :</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" class="form-control" aria-label="nomSite" value="{{ participant.site.nom }}" readonly>
+                    </div>
+                </div>
+                <hr>
+                <a href="{{ path('app_main') }}" class="btn btn-primary btn-lg" role="button">Retour</a>
             </div>
         </div>
-        <hr>
-        <a href="{{ path('app_main') }}" class="btn btn-primary btn-lg" role="button">Retour</a>
-    </div>
-</div>
+    {% endif %}
 {% endblock %}
