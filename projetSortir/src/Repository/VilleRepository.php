@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Ville|null find($id, $lockMode = null, $lockVersion = null)
@@ -54,6 +55,25 @@ class VilleRepository extends ServiceEntityRepository
         $entity ->setNom($nomVille)
                 ->setCp($cp);
         $this->_em->flush();
+    }
+
+    // /**
+    //  * @return Sortie[] Returns an array of Sortie objects filtered by what user ask
+    //  */
+    public function findFilteredVilles(Request $request){
+        /* Paramètre de la requête */
+        $nomVille = $request->get("ville");
+
+        /* Création de la requêtes */
+        $res = $this->createQueryBuilder('ville');
+
+        if(!empty(trim($nomVille))) {
+            $res->andWhere('ville.nom like :ville')
+                ->setParameter('ville', "%".$nomVille."%");
+        }
+
+        return $res ->getQuery()
+                    ->getResult();
     }
 
     // /**
