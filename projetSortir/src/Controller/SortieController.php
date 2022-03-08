@@ -77,7 +77,7 @@ class SortieController extends AbstractController
                 $sortie->getLieu()->setVille($villeRepo->find((int) $obj["ville"]));
                 //-- état par défaut = créée
                 $etat = $etatRepo->findOneBy(array('libelle' => 'Créée'));
-                
+
                 if (empty($etat))
                 {
                     $etat = new Etat();
