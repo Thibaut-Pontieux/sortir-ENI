@@ -39,4 +39,22 @@ class GestionUsersController extends AbstractController
         
         return $this->redirectToRoute('gestion_users'); 
     }
+
+    /**
+     * @Route("/gestion/users/desactiver/{id}", name="gestion_users_desactiver")
+     */
+    public function desactiver(ParticipantRepository $participantRepository, EntityManagerInterface $em, int $id): Response
+    {
+        if ($participantRepository->find($id)){
+            $user = $participantRepository->find($id);
+            $user->setActif(!$user->getActif());
+            $em->flush();
+
+            $this->addFlash("success", sprintf("Utilisateur %s avec succès", $user->getActif() ? "activé" : "déactivé"));
+        } else {
+            $this->addFlash("error", "Erreur lors de la maj du statut d'un utilisateur");
+        }
+        
+        return $this->redirectToRoute('gestion_users'); 
+    }
 }

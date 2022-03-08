@@ -48,6 +48,15 @@
                                         <div class="col-auto">
                                             <a href="{{ path('gestion_users_delete', {id : u.id})}}">Delete</a>
                                         </div>
+                                        {% if u.actif %}
+                                        <div class="col-auto">
+                                            <a href="{{ path('gestion_users_desactiver', {id : u.id})}}">Desactiver</a>
+                                        </div>
+                                        {% else %}
+                                        <div class="col-auto">
+                                            <a href="{{ path('gestion_users_desactiver', {id : u.id})}}">Activer</a>
+                                        </div>
+                                        {% endif %}
                                     {% elseif not u.administrateur %}
                                         <div class="col-auto">
                                             <a href="{{ path('app_main')}}">Add to admin</a>
@@ -55,6 +64,15 @@
                                         <div class="col-auto">
                                             <a href="{{ path('gestion_users_delete', {id : u.id})}}">Delete</a>
                                         </div>
+                                        {% if u.actif %}
+                                        <div class="col-auto">
+                                            <a href="{{ path('gestion_users_desactiver', {id : u.id})}}">Desactiver</a>
+                                        </div>
+                                        {% else %}
+                                        <div class="col-auto">
+                                            <a href="{{ path('gestion_users_desactiver', {id : u.id})}}">Activer</a>
+                                        </div>
+                                        {% endif %}
                                     {% else %}
                                         <div class="col-auto">
                                             On ne supprime pas l'admin des admins...
