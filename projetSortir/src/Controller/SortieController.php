@@ -75,7 +75,7 @@ class SortieController extends AbstractController
                 $sortie->setLieu($lieuRepo->find($obj["lieu"]));
                 $sortie->getLieu()->setVille($villeRepo->find((int) $obj["ville"]));
                 //-- état par défaut = crée
-                $sortie->setEtat($etatRepo->findOneBy(array('libelle' => 'Crée')));
+                $sortie->setEtat($etatRepo->findOneBy(array('libelle' => 'Créée')));
                 //-- site = celui de l'organisateur
                 $sortie->setSite($orgaRepo->findOneBy(array('pseudo' => $utilisateur->getUserIdentifier()))->getSite());
 

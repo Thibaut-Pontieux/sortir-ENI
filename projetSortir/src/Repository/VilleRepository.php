@@ -45,6 +45,17 @@ class VilleRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function modify(Ville $entity, ?string $nomVille, ?string $cp): void
+    {
+        $entity ->setNom($nomVille)
+                ->setCp($cp);
+        $this->_em->flush();
+    }
+
     // /**
     //  * @return Ville[] Returns an array of Ville objects
     //  */
