@@ -143,7 +143,7 @@
                         <td>{{ s.nom }}</td>
                         <td>{{ s.dateDebut | date('d/m/Y')}}</td>
                         <td>{{ s.dateClotureInscription | date('d/m/Y')}}</td>
-                        <td>X/{{ s.nbInscriptionsMax }}</td>
+                        <td>{{ s.inscriptions|length }}/{{ s.nbInscriptionsMax }}</td>
                         <td>{{ s.etat.libelle }}</td>
                         {% if inscrit %}
                             <td style="color: #36cf3b; text-align: center; font-size: x-large">✓</td>

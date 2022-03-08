@@ -125,25 +125,29 @@ class SortieRepository extends ServiceEntityRepository
                 $res->andWhere('organisateur = :organisateur')
                     ->setParameter('organisateur', $this->security->getUser());
             }
-            /*
-             * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
-             * Si le "inscrit" est egale à "" (est coché), alors on applique une clause WHERE sur inscription (id_sortie et id_participant).
-             */
-            if($inscrit !== null){
 
-                $res->join("sortie.inscriptions", "inscription")
-                    ->andWhere('inscription.participant = :participant')
-                    ->setParameter('participant', $this->security->getUser());
+            /*
+             * NOTE : Si les deux cases inscrit et nonInscrit sont cochées, alors on souhaite récupérer l'ensemble des sorties donc, inutile ici d'ajouter les clauses WHERE
+             * d'où la double vérification sur $inscrit et $nonInscrit
+             */
+
+            /*
+             * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
+             * Si le "inscrit" est egale à "" (est coché), alors on récupère les sorties auxquelles il participe.
+             */
+            if($inscrit !== null && $nonInscrit === null){
+                $res->andWhere('sortie.id IN (SELECT IDENTITY(i.sortie) FROM App\Entity\Inscription i WHERE i.participant = :participant)')
+                ->setParameter('participant', $this->security->getUser());
             }
             /*
              * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
-             * Si le "nonInscrit" est egale à "" (est coché), alors on applique une clause WHERE sur inscription (id_sortie et id_participant).
+             * Si le "nonInscrit" est egale à "" (est coché), alors on récupère les sorties auxquelles il ne participe pas.
              */
-            if($nonInscrit !== null){
-                $res->join("sortie.inscriptions", "inscription")
-                    ->andWhere('inscription.participant != :participant')
+            if($nonInscrit !== null && $inscrit === null){
+                $res->andWhere('sortie.id NOT IN (SELECT IDENTITY(i.sortie) FROM App\Entity\Inscription i WHERE i.participant = :participant)')
                     ->setParameter('participant', $this->security->getUser());
             }
+
             /*
              * Champ facultatif. Si l'utilisateur n'a rien coché, la valeur n'existe pas.
              * Si le "sortiesPassees" est egale à "" (est coché), alors on applique une clause WHERE sur etat.
