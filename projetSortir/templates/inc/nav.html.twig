@@ -13,7 +13,7 @@
                     <a class="nav-link active" aria-current="page" href="{{ path('app_main') }}">Accueil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Mon profil</a>
+                    <a class="nav-link" href="{{ path('updateParticipant', { 'pseudo': app.user.pseudo }) }}">Mon profil</a>
                 </li>
                 {% for role in app.user.roles %}
                     {% if role == "ROLE_ADMIN" %}

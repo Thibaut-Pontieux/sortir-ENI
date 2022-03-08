@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Inscription;
 use App\Repository\SortieRepository;
 use App\Entity\Sortie;
+use App\Entity\Etat;
 use App\Repository\EtatRepository;
 use App\Repository\InscriptionRepository;
 use App\Repository\LieuRepository;
@@ -74,8 +75,17 @@ class SortieController extends AbstractController
                 $sortie->setParticipant($utilisateur);
                 $sortie->setLieu($lieuRepo->find($obj["lieu"]));
                 $sortie->getLieu()->setVille($villeRepo->find((int) $obj["ville"]));
-                //-- état par défaut = crée
-                $sortie->setEtat($etatRepo->findOneBy(array('libelle' => 'Créée')));
+                //-- état par défaut = créée
+                $etat = $etatRepo->findOneBy(array('libelle' => 'Créée'));
+
+                if (empty($etat))
+                {
+                    $etat = new Etat();
+                    $etat->setLibelle('Créée');
+                    $em->persist($etat);
+                }
+
+                $sortie->setEtat($etat);
                 //-- site = celui de l'organisateur
                 $sortie->setSite($orgaRepo->findOneBy(array('pseudo' => $utilisateur->getUserIdentifier()))->getSite());
 
