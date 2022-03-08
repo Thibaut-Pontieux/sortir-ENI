@@ -29,7 +29,7 @@ class GestionVillesController extends AbstractController
         /*
          * Récupération des villes en base
          */
-        $villes = $villeRepository->findAll();
+        $villes = $villeRepository->findFilteredVilles($request);
 
         /*
          * Récupération d'une ville en fonction de l'id placé en paramètre.
