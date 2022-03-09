@@ -6,6 +6,7 @@ use App\Repository\LieuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LieuRepository::class)
@@ -21,11 +22,25 @@ class Lieu
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Assert\NotBlank(message="Veuillez renseigner une valeur")
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 30,
+     *      minMessage = "Le nom doit avoir au moins {{ limit }} caractères.",
+     *      maxMessage = "Le nom doit avoir moins de {{ limit }} caractères."
+     * )
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=30, nullable=true)
+     * @Assert\NotBlank(message="Veuillez renseigner une valeur")
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 30,
+     *      minMessage = "La rue doit avoir au moins {{ limit }} caractères.",
+     *      maxMessage = "La rue doit avoir moins de {{ limit }} caractères."
+     * )
      */
     private $rue;
 
@@ -40,13 +55,13 @@ class Lieu
     private $longitude;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Ville::class, inversedBy="lieux")
+     * @ORM\ManyToOne(targetEntity=Ville::class, cascade={"persist"}, inversedBy="lieux")
      * @ORM\JoinColumn(nullable=false)
      */
     private $ville;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="lieu", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="lieu", cascade={"remove"}, orphanRemoval=true)
      */
     private $sorties;
 

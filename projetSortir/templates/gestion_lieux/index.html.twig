@@ -1,0 +1,173 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}Gestion lieux{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <h2>Gestion des lieux</h2>
+        <hr>
+        <h3>Filtrer les lieux</h3>
+        {# Formulaire pour le filtre #}
+        <form class="row align-items-center" method="get" action="{{ path('gestion_lieux') }}">
+            {# Recherche "Nom du lieu" #}
+            <div class="row align-items-center">
+                <div class="col-auto mb-3">
+                    <div class="input-group">
+                        <label for="lieu" class="col-form-label input-group-text">🔍</label>
+                        <input id="lieu" name="lieu" type="text" class="form-control">
+                    </div>
+                </div>
+                {# Selecteur de ville #}
+                <div class="col-auto mb-3">
+                    <div class="input-group">
+                        <label for="ville" class="col-form-label input-group-text">Ville</label>
+                        <select id ="ville" name="ville" class="form-select">
+                            <option value="0" selected>Toute les villes</option>
+                            {% for ville in villes %}
+                                <option value="{{ ville.id }}">{{ ville.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {# Bouton "Rechercher" #}
+                <div class="col-auto mb-3">
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        {% if lieu.id %}
+            <h3>Modifier un lieu</h3>
+        {% else %}
+            <h3>Ajouter un lieu</h3>
+        {% endif %}
+        {{ form_start(lieuView) }}
+        {{ form_errors(lieuView) }}
+                <div class="row align-items-center mb-3">
+                    <div class="col-auto mb-3">
+                        <div class="input-group">
+                            {{ form_label(lieuView.nom) }}
+                            {{ form_widget(lieuView.nom) }}
+                            {{ form_errors(lieuView.nom) }}
+                        </div>
+                    </div>
+                    <div class="col-auto mb-3">
+                        <div class="input-group">
+                            {{ form_label(lieuView.rue) }}
+                            {{ form_widget(lieuView.rue) }}
+                            {{ form_errors(lieuView.rue) }}
+                        </div>
+                    </div>
+                    <div class="col-auto mb-3">
+                        <div class="input-group">
+                            {{ form_label(lieuView.latitude) }}
+                            {{ form_widget(lieuView.latitude) }}
+                            {{ form_errors(lieuView.latitude) }}
+                        </div>
+                    </div>
+                    <div class="col-auto mb-3">
+                        <div class="input-group">
+                            {{ form_label(lieuView.longitude) }}
+                            {{ form_widget(lieuView.longitude) }}
+                            {{ form_errors(lieuView.longitude) }}
+                        </div>
+                    </div>
+                    {# Selecteur de ville #}
+                    <div class="col-auto mb-3">
+                        <div class="input-group">
+                            {{ form_label(lieuView.ville) }}
+                            {{ form_widget(lieuView.ville) }}
+                            {{ form_errors(lieuView.ville) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center mb-3">
+                    <div class="col-auto mb-3">
+                        <button type="submit" class="btn btn-primary md-3">Valider</button>
+                    </div>
+                    {% if lieu.id %}
+                        <div class="col-auto mb-3">
+                            <a type="button" class="btn btn-danger md-3"
+                               href="{{ path('gestion_lieux')}}">Annuler</a>
+                        </div>
+                    {% endif %}
+                    <div class="col-auto mb-3">
+                        <a type="button" class="btn btn-secondary md-3"
+                           href="{{ path('gestion_villes')}}">Nouvelle ville</a>
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    {#        Messages d'erreur / Succès #}
+                    {% for categorie, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="flash flash-{{ categorie }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+        {{ form_end(lieuView) }}
+        <hr>
+        {# Tableau #}
+        <div id="table"
+             class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar table-hover table-responsive container-fluid">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Rue</th>
+                    <th scope="col">Long/Lat</th>
+                    <th scope="col">Ville</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for l in lieux %}
+                    <tr>
+                        <td>{{ l.nom }}</td>
+                        <td>{{ l.rue }}</td>
+                        <td>{% if l.longitude is not null %}
+                                {{ l.longitude }}
+                            {% else %}
+                                NR
+                            {% endif %}
+                        /
+                            {% if l.latitude is not null %}
+                                {{ l.longitude }}
+                            {% else %}
+                                NR
+                            {% endif %}</td>
+                        <td>{{ l.ville.nom }}</td>
+                        <td>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <a type="button" class="btn btn-warning btn-sm"
+                                       href="{{ path('gestion_lieux', {'id':l.id}) }}">Modifier</a>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="btn btn-danger btn-sm" onclick="del('{{ path('gestion_lieux_delete', {'id': l.id}) }}')">Supprimer</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function del(route) {
+            const oReq = new XMLHttpRequest();
+            oReq.onload = setTimeout(document.location.reload(true), 1000);
+            oReq.open("delete", route, true);
+            oReq.send();
+        }
+    </script>
+{% endblock %}
