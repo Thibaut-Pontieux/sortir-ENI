@@ -78,6 +78,7 @@ class SortieController extends AbstractController
                 //-- état par défaut = créée
                 $etat = $etatRepo->findOneBy(array('libelle' => 'Créée'));
 
+                // Si l'état n'existe pas alors on le créer
                 if (empty($etat))
                 {
                     $etat = new Etat();
@@ -198,6 +199,15 @@ class SortieController extends AbstractController
             if ($sortie->getDateDebut() > new DateTime()){
                 if ($sortie->getParticipant() == $this->getUser() || in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
                     $etat = $etatRepo->findOneBy(array('libelle' => 'Annulée'));
+
+                    // Si l'état n'existe pas alors on le créer
+                    if (empty($etat))
+                    {
+                        $etat = new Etat();
+                        $etat->setLibelle('Annulée');
+                        $em->persist($etat);
+                    }
+
                     $sortie->setEtat($etat);
                     $em->flush();
             
