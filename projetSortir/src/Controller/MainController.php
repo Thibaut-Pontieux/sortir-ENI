@@ -25,6 +25,16 @@ class MainController extends AbstractController
         if ($this->getUser() == null) {
             return $this->redirectToRoute('login');
         }
+
+        // Si l'utilisateur n'est pas actif on le redirige vers la page de connexion        
+        if ($this->getUser() && $participantRepository->findOneBy(array('pseudo' => $this->getUser()->getUserIdentifier()))->getActif() == false){
+            
+            $this->addFlash("error", 'Votre compte est inactif, veuillez contacter l\'administrateur');
+           
+            return $this->redirectToRoute('login');
+        }
+        
+
         // On récupère la date d'aujourd'hui
         $date = (new \DateTime('now'))->format('d/m/Y');
 

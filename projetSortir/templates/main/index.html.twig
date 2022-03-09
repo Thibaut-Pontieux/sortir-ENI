@@ -10,166 +10,168 @@
 
 {# Body #}
 {% block body %}
-    <div class="container-fluid">
-        {# Première ligne : Date du jour et participant #}
-        <div class="row align-items-center">
-            <div class="col-9"></div>
-            <div class="col-3">
-                <p>
-                    <b><label>Date du jour :</label><span> {{ currentDate }}</span></b>
-                </p>
-                <p>
-                    <b><label>Participant : </label><span> {{ app.user.nom }} {{ app.user.prenom}}</span></b>
-                </p>
-            </div>
-        </div>
-        <hr>
-        {# Deuxième ligne: Filtrer les sorties #}
-        <h2>Filtrer les sorties</h2>
-        <form class="row align-items-center" method="get" action="{{ path('app_main') }}">
-            {# Colonne 1 : Select site #}
-            <div class="col-6">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <label for="siteSelect" class="col-form-label">Site : </label>
-                    </div>
-                    <div class="col-auto">
-                        <select id="siteSelect" name="siteSelect" class="form-select">
-                            <option value="0">Tous</option>
-                            {% for site in sites %}
-                                <option value="{{ site.id }}">{{ site.nom }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+    {% if app.user and app.user.actif %}
+        <div class="container-fluid">
+            {# Première ligne : Date du jour et participant #}
+            <div class="row align-items-center">
+                <div class="col-9"></div>
+                <div class="col-3">
+                    <p>
+                        <b><label>Date du jour :</label><span> {{ currentDate }}</span></b>
+                    </p>
+                    <p>
+                        <b><label>Participant : </label><span> {{ app.user.nom }} {{ app.user.prenom}}</span></b>
+                    </p>
                 </div>
-                {# Recherche nom de la sortie #}
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <label for="nomSortie" class="col-form-label">Le nom de la sortie contient : </label>
+            </div>
+            <hr>
+            {# Deuxième ligne: Filtrer les sorties #}
+            <h2>Filtrer les sorties</h2>
+            <form class="row align-items-center" method="get" action="{{ path('app_main') }}">
+                {# Colonne 1 : Select site #}
+                <div class="col-6">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <label for="siteSelect" class="col-form-label">Site : </label>
+                        </div>
+                        <div class="col-auto">
+                            <select id="siteSelect" name="siteSelect" class="form-select">
+                                <option value="0">Tous</option>
+                                {% for site in sites %}
+                                    <option value="{{ site.id }}">{{ site.nom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-auto">
-                        <div class="input-group mb-3">
-                            <span class="col-form-label input-group-text">🔍</span>
-                            <input id="nomSortie" name="nomSortie" type="text" class="form-control">
+                    {# Recherche nom de la sortie #}
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <label for="nomSortie" class="col-form-label">Le nom de la sortie contient : </label>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group mb-3">
+                                <span class="col-form-label input-group-text">🔍</span>
+                                <input id="nomSortie" name="nomSortie" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    {# Selecteur des dates #}
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <label for="dateDebut" class="col-form-label">Entre </label>
+                        </div>
+                        <div class="col-auto">
+                            <input id="dateDebut" name="dateDebut" type="date" class="form-control">
+                        </div>
+                        <div class="col-auto">
+                            <label for="dateFin" class="col-form-label"> et </label>
+                        </div>
+                        <div class="col-auto">
+                            <input id="dateFin" name="dateFin" type="date" class="form-control">
                         </div>
                     </div>
                 </div>
-                {# Selecteur des dates #}
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <label for="dateDebut" class="col-form-label">Entre </label>
+                {# Colonne 2 : CheckBox Sortie #}
+                <div class="col-4">
+                    <div class="form-check">
+                        <input id="sortiesOrganisateur" name="sortiesOrganisateur" type="checkbox" class="form-check-input" value="1">
+                        <label class="form-check-label" for="sortiesOrganisateur">
+                            Sorties dont je suis l'organisateur/trice.
+                        </label>
                     </div>
-                    <div class="col-auto">
-                        <input id="dateDebut" name="dateDebut" type="date" class="form-control">
+                    <div class="form-check">
+                        <input  id="sortiesInscrit" name="sortiesInscrit" type="checkbox" class="form-check-input" value="1">
+                        <label class="form-check-label" for="sortiesInscrit">
+                            Sorties auxquelles je suis inscrit/e.
+                        </label>
                     </div>
-                    <div class="col-auto">
-                        <label for="dateFin" class="col-form-label"> et </label>
+                    <div class="form-check">
+                        <input id="sortiesNonInscrit" name="sortiesNonInscrit" type="checkbox" class="form-check-input" value="1">
+                        <label class="form-check-label" for="sortiesNonInscrit">
+                            Sorties auxquelles je ne suis pas inscrit/e.
+                        </label>
                     </div>
-                    <div class="col-auto">
-                        <input id="dateFin" name="dateFin" type="date" class="form-control">
+                    <div class="form-check">
+                        <input id="sortiesPassees" name="sortiesPassees" type="checkbox" class="form-check-input" value="1">
+                        <label class="form-check-label" for="sortiesPassees">
+                            Sorties passées.
+                        </label>
                     </div>
+                </div>
+                {# Colonne 3 : Bouton rechercher #}
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                </div>
+            </form>
+            <hr>
+            {# Troisième ligne : Bouton créer une sortie #}
+            <div id="ligneBoutonCreerSortie" class="row align-items-center">
+                <div class="col-auto">
+                    <a href="{{ path('sortie_add') }}" class="btn btn-primary btn" role="button">Créer une sortie</a>
                 </div>
             </div>
-            {# Colonne 2 : CheckBox Sortie #}
-            <div class="col-4">
-                <div class="form-check">
-                    <input id="sortiesOrganisateur" name="sortiesOrganisateur" type="checkbox" class="form-check-input" value="1">
-                    <label class="form-check-label" for="sortiesOrganisateur">
-                        Sorties dont je suis l'organisateur/trice.
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input  id="sortiesInscrit" name="sortiesInscrit" type="checkbox" class="form-check-input" value="1">
-                    <label class="form-check-label" for="sortiesInscrit">
-                        Sorties auxquelles je suis inscrit/e.
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input id="sortiesNonInscrit" name="sortiesNonInscrit" type="checkbox" class="form-check-input" value="1">
-                    <label class="form-check-label" for="sortiesNonInscrit">
-                        Sorties auxquelles je ne suis pas inscrit/e.
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input id="sortiesPassees" name="sortiesPassees" type="checkbox" class="form-check-input" value="1">
-                    <label class="form-check-label" for="sortiesPassees">
-                        Sorties passées.
-                    </label>
-                </div>
-            </div>
-            {# Colonne 3 : Bouton rechercher #}
-            <div class="col-2">
-                <button type="submit" class="btn btn-primary">Rechercher</button>
-            </div>
-        </form>
-        <hr>
-        {# Troisième ligne : Bouton créer une sortie #}
-        <div id="ligneBoutonCreerSortie" class="row align-items-center">
-            <div class="col-auto">
-                <a href="{{ path('sortie_add') }}" class="btn btn-primary btn" role="button">Créer une sortie</a>
-            </div>
-        </div>
-        {% for categorie, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="flash flash-{{ categorie }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endfor %}
-        {# Quatrième ligne : Tableau des sorties #}
-        <div id="table" class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Nom de la sortie</th>
-                        <th scope="col">Date de la sortie</th>
-                        <th scope="col">Clôture</th>
-                        <th scope="col">Inscrits/Places</th>
-                        <th scope="col">Etat</th>
-                        <th scope="col">Inscrit</th>
-                        <th scope="col">Organisateur</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for s in sorties %}
-                    {% set inscrit = false %}
-                    {% for i in s.inscriptions %}
-                        {% if (user == i.participant) %}
-                            {% set inscrit = true %}
-                        {% endif %}
-                    {% endfor %}
-                    <tr>
-                        <td>{{ s.nom }}</td>
-                        <td>{{ s.dateDebut | date('d/m/Y')}}</td>
-                        <td>{{ s.dateClotureInscription | date('d/m/Y')}}</td>
-                        <td>{{ s.inscriptions|length }}/{{ s.nbInscriptionsMax }}</td>
-                        <td>{{ s.etat.libelle }}</td>
-                        {% if inscrit %}
-                            <td style="color: #36cf3b; text-align: center; font-size: x-large">✓</td>
-                        {% else %}
-                            <td style="color: #cf3636; text-align: center; font-size: x-large">X</td>
-                        {% endif %}
-                        <td><a href="{{  path('participant', { 'pseudo': s.participant.pseudo }) }}">{{ s.participant.pseudo }}</a></td>
-                        <td>
-                            {# Cas 1 : Si on est "consulteur" ou "créateur" #}
-                            {% if user == s.participant %}
-                                <a href="{{ path('sortie_modify', {'id':s.id }) }}">Modifier</a>
-                                <a href="#">Publier</a>
-                                <a href="{{ path('sortie_cancel', {'id':s.id }) }}">Annuler</a>
-                            {% else %}
-                                <a href="{{ path('sortie', {'id':s.id }) }}">Afficher</a>
-                                {% if inscrit %}
-                                    <a href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
-                                {% else %}
-                                    <a href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
-                                {% endif %}
-                            {% endif %}
-                        </td>
-                    </tr>
+            {% for categorie, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash flash-{{ categorie }}">
+                        {{ message }}
+                    </div>
                 {% endfor %}
-                </tbody>
-            </table>
+            {% endfor %}
+            {# Quatrième ligne : Tableau des sorties #}
+            <div id="table" class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nom de la sortie</th>
+                            <th scope="col">Date de la sortie</th>
+                            <th scope="col">Clôture</th>
+                            <th scope="col">Inscrits/Places</th>
+                            <th scope="col">Etat</th>
+                            <th scope="col">Inscrit</th>
+                            <th scope="col">Organisateur</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for s in sorties %}
+                        {% set inscrit = false %}
+                        {% for i in s.inscriptions %}
+                            {% if (user == i.participant) %}
+                                {% set inscrit = true %}
+                            {% endif %}
+                        {% endfor %}
+                        <tr>
+                            <td>{{ s.nom }}</td>
+                            <td>{{ s.dateDebut | date('d/m/Y')}}</td>
+                            <td>{{ s.dateClotureInscription | date('d/m/Y')}}</td>
+                            <td>{{ s.inscriptions|length }}/{{ s.nbInscriptionsMax }}</td>
+                            <td>{{ s.etat.libelle }}</td>
+                            {% if inscrit %}
+                                <td style="color: #36cf3b; text-align: center; font-size: x-large">✓</td>
+                            {% else %}
+                                <td style="color: #cf3636; text-align: center; font-size: x-large">X</td>
+                            {% endif %}
+                            <td><a href="{{  path('participant', { 'pseudo': s.participant.pseudo }) }}">{{ s.participant.pseudo }}</a></td>
+                            <td>
+                                {# Cas 1 : Si on est "consulteur" ou "créateur" #}
+                                {% if user == s.participant %}
+                                    <a href="{{ path('sortie_modify', {'id':s.id }) }}">Modifier</a>
+                                    <a href="#">Publier</a>
+                                    <a href="{{ path('sortie_cancel', {'id':s.id }) }}">Annuler</a>
+                                {% else %}
+                                    <a href="{{ path('sortie', {'id':s.id }) }}">Afficher</a>
+                                    {% if inscrit %}
+                                        <a href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
+                                    {% else %}
+                                        <a href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}

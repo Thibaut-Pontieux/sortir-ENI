@@ -3,16 +3,12 @@
 {% block mainTitle %}Inscription avec un fichier CSV!{% endblock %}
 
 {% block body %}
-
-    <div class="container">
-        
-    {{ form_start(form) }}
-
-        {{ form_row(form.submitFile) }}
-
-        <button type="submit" class="btn btn-primary">Inscrire</button>
-        
-        {{ form_end(form) }}
-
-    </div>
+    {% if app.user and app.user.actif %}
+        <div class="container">   
+            {{ form_start(form) }}
+            {{ form_row(form.submitFile) }}
+            <button type="submit" class="btn btn-primary">Inscrire</button>    
+            {{ form_end(form) }}
+        </div>
+    {% endif %}
 {% endblock %}
