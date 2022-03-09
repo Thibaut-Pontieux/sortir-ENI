@@ -2,51 +2,51 @@
 
 {% block title %}Sortie{% endblock %}
 
-    {% block mainTitle %}Afficher une sortie{% endblock %}
+{% block mainTitle %}Afficher une sortie{% endblock %}
 
-    {% block body %}
+{% block body %}
+    {% if app.user and app.user.actif %}
+        <div class="container">
+            <div class=" my-4 row">
+                {% if sortie != null %}
+                    <ul class="list-group col">
+                        <li class="list-group-item"><span class="fw-bold">Nom de la sortie : </span>{{ sortie.nom }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Ville organisatrice : </span>{{ sortie.site.nom }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Organisateur : </span>{{ sortie.participant.nom }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Etat : </span>{{ sortie.etat.libelle }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Date et heure de la sortie : </span>{{ sortie.dateDebut | date("d/m/Y") }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Date limite d'inscription : </span>{{ sortie.dateClotureInscription | date("d/m/Y") }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Nombre de places : </span>{{ sortie.nbInscriptionsMax }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Durée : </span>{{ sortie.duree }} minute(s)</li>
+                        <li class="list-group-item"><span class="fw-bold">Ville : </span>{{ sortie.lieu.ville.nom }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Lieu : </span>{{ sortie.lieu.nom }}</li> 
+                        <li class="list-group-item"><span class="fw-bold">Rue : </span>{{  sortie.lieu.rue }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Code postal : </span>{{  sortie.lieu.ville.cp }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Latitude : </span>{{ sortie.lieu.latitude }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Longitude : </span>{{  sortie.lieu.longitude }}</li>
+                    </ul>
 
-    <div class="container">
-        <div class=" my-4 row">
-            {% if sortie != null %}
-                <ul class="list-group col">
-                    <li class="list-group-item"><span class="fw-bold">Nom de la sortie : </span>{{ sortie.nom }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Ville organisatrice : </span>{{ sortie.site.nom }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Organisateur : </span>{{ sortie.participant.nom }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Etat : </span>{{ sortie.etat.libelle }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Date et heure de la sortie : </span>{{ sortie.dateDebut | date("d/m/Y") }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Date limite d'inscription : </span>{{ sortie.dateClotureInscription | date("d/m/Y") }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Nombre de places : </span>{{ sortie.nbInscriptionsMax }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Durée : </span>{{ sortie.duree }} minute(s)</li>
-                    <li class="list-group-item"><span class="fw-bold">Ville : </span>{{ sortie.lieu.ville.nom }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Lieu : </span>{{ sortie.lieu.nom }}</li> 
-                    <li class="list-group-item"><span class="fw-bold">Rue : </span>{{  sortie.lieu.rue }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Code postal : </span>{{  sortie.lieu.ville.cp }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Latitude : </span>{{ sortie.lieu.latitude }}</li>
-                    <li class="list-group-item"><span class="fw-bold">Longitude : </span>{{  sortie.lieu.longitude }}</li>
-                </ul>
-
-                <table class="table table-bordered my-4">
-                    <thead>
-                        <tr>
-                        <th scope="col">Pseudo :</th>
-                        <th scope="col">Prénom :</th>
-                        <th scope="col">Nom :</th>
-                        </tr>
-                    </thead>
-                    <tbody>             
-                        {% for incrit in sortie.inscriptions %}
-                        <tr>
-                            <td>{{ incrit.participant.pseudo }}</td>
-                            <td>{{ incrit.participant.prenom }}</td>
-                            <td>{{ incrit.participant.nom }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-        </div> 
-    </div>
-
-    {% endblock body %}
+                    <table class="table table-bordered my-4">
+                        <thead>
+                            <tr>
+                            <th scope="col">Pseudo :</th>
+                            <th scope="col">Prénom :</th>
+                            <th scope="col">Nom :</th>
+                            </tr>
+                        </thead>
+                        <tbody>             
+                            {% for incrit in sortie.inscriptions %}
+                            <tr>
+                                <td>{{ incrit.participant.pseudo }}</td>
+                                <td>{{ incrit.participant.prenom }}</td>
+                                <td>{{ incrit.participant.nom }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div> 
+        </div>
+    {% endif %}
+{% endblock body %}
 

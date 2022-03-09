@@ -3,35 +3,37 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1 style="text-align: center">Inscription</h1>
-        <hr>
-        <div class="row">
-            {{ form_start(registrationForm) }}
-                {{ form_row(registrationForm.pseudo, {
-                    label: 'Pseudo',
-                }) }}
-                {{ form_row(registrationForm.plainPassword, {
-                    label: 'Mot de passe',
-                }) }}
-                {{ form_row(registrationForm.nom) }}
-                {{ form_row(registrationForm.prenom) }}
-                {{ form_row(registrationForm.telephone) }}
-                {{ form_row(registrationForm.mail) }}
-                {{ form_row(registrationForm.site) }}
-                <div class="row">
-                    <div class="col text-center">
-                        <button class="btn btn-primary btn-lg" type="submit">Inscrire</button>
+    {% if app.user and app.user.actif %}
+        <div class="container">
+            <h1 style="text-align: center">Inscription</h1>
+            <hr>
+            <div class="row">
+                {{ form_start(registrationForm) }}
+                    {{ form_row(registrationForm.pseudo, {
+                        label: 'Pseudo',
+                    }) }}
+                    {{ form_row(registrationForm.plainPassword, {
+                        label: 'Mot de passe',
+                    }) }}
+                    {{ form_row(registrationForm.nom) }}
+                    {{ form_row(registrationForm.prenom) }}
+                    {{ form_row(registrationForm.telephone) }}
+                    {{ form_row(registrationForm.mail) }}
+                    {{ form_row(registrationForm.site) }}
+                    <div class="row">
+                        <div class="col text-center">
+                            <button class="btn btn-primary btn-lg" type="submit">Inscrire</button>
+                        </div>
+                        <div class="col text-center">
+                            <a href="{{ path('app_main') }}" class="btn btn-danger btn-lg" role="button">Retour</a>
+                        </div>
                     </div>
-                    <div class="col text-center">
-                        <a href="{{ path('app_main') }}" class="btn btn-danger btn-lg" role="button">Retour</a>
-                    </div>
-                </div>
-            {{ form_end(registrationForm) }}
+                {{ form_end(registrationForm) }}
+            </div>
+            <hr>
+            <div class="col text-center">
+                <a href="{{ path('register_csv')}}"><input type="button" value="Bouton magique des admins fainéants" class="btn btn-secondary md-3"/></a>
+            </div>
         </div>
-        <hr>
-        <div class="col text-center">
-            <a href="{{ path('register_csv')}}"><input type="button" value="Bouton magique des admins fainéants" class="btn btn-secondary md-3"/></a>
-        </div>
-    </div>
+    {% endif %}
 {% endblock %}
