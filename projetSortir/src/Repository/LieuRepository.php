@@ -46,6 +46,25 @@ class LieuRepository extends ServiceEntityRepository
     }
 
     // /**
+    //  * @return Lieu[] Returns an array of Lieu objects filtered by what user ask
+    //  */
+    public function findFilteredLieux(string $nomLieu, string $idVille){
+        /* Création de la requêtes */
+        $res = $this->createQueryBuilder('lieu');
+        if(!empty(trim($nomLieu))) {
+            $res->andWhere('lieu.nom like :lieu')
+                ->setParameter('lieu', "%".$nomLieu."%");
+        }
+        if(!empty($idVille) or $idVille != '0'){
+            $res->join('lieu.ville', 'ville')
+                ->andWhere('ville.id = :ville')
+                ->setParameter('ville',(int)$idVille);
+        }
+        return $res ->getQuery()
+                    ->getResult();
+    }
+
+    // /**
     //  * @return Lieu[] Returns an array of Lieu objects
     //  */
     /*
