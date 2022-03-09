@@ -8,35 +8,13 @@
 {% block title %}Gestion villes{% endblock %}
 
 {% block body %}
-    {% if app.user and app.user.actif %}
-        <div class="container-fluid">
-            <h2>Gestion des villes</h2>
-            <hr>
-            <h3>Filtrer les villes</h3>
-            {# Formulaire pour le filtre #}
-            <form class="row align-items-center" method="get" action="{{ path('gestion_villes') }}">
-                {# Recherche "Nom de la ville" #}
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <div class="input-group">
-                            <label for="nomVille" class="col-form-label input-group-text">🔍</label>
-                            <input id="nomVille" name="nomVille" type="text" class="form-control">
-                        </div>
-                    </div>
-                    {# Bouton "Rechercher" #}
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">Rechercher</button>
-                    </div>
-                </div>
-            </form>
-            <hr>
-            {% if ville.id %}
-                <h3>Modifier une ville</h3>
-            {% else %}
-                <h3>Ajouter une ville</h3>
-            {% endif %}
-            {{ form_start(villeView) }}
-            {{ form_errors(villeView) }}
+    <div class="container-fluid">
+        <h2>Gestion des villes</h2>
+        <hr>
+        <h3>Filtrer les villes</h3>
+        {# Formulaire pour le filtre #}
+        <form class="row align-items-center" method="get" action="{{ path('gestion_villes') }}">
+            {# Recherche "Nom de la ville" #}
             <div class="row align-items-center">
                 <div class="col-auto">
                     <div class="input-group">
@@ -44,77 +22,100 @@
                         <input id="nomVille" name="ville" type="text" class="form-control">
                     </div>
                 </div>
-                {#
-                    Si on modifie (modify = true), alors on n'affiche pas le formulaire CP
-                    Si on ne modifie pas, on ajoute. (modify = false) On affiche alors le formulaire.
-                #}
-                {#{% if not modify %}#}
+                {# Bouton "Rechercher" #}
                 <div class="col-auto">
-                    <div class="input-group">
-                        {{ form_label(villeView.cp) }}
-                        {{ form_widget(villeView.cp) }}
-                        {{ form_errors(villeView.cp) }}
-                    </div>
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
                 </div>
-                {#{% endif %}#}
-                <div class="col-auto">
-                    <div class="row">
-                        <div class="col">
-                            <button type="submit" class="btn btn-primary md-3">Valider</button>
-                        </div>
-                        {% if ville.id %}
-                        <div class="col">
-                            <a type="button" class="btn btn-danger md-3"
-                            href="{{ path('gestion_villes')}}">Annuler</a>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                {#        Messages d'erreur / Succès #}
-                {% for categorie, messages in app.flashes %}
-                    {% for message in messages %}
-                        <div class="flash flash-{{ categorie }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endfor %}
             </div>
-            {{ form_end(villeView) }}
-            <hr>
-            {# Tableau #}
-            <div id="table"
-                class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar table-hover table-responsive container-fluid">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">Ville</th>
-                        <th scope="col">Code postal</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for v in villes %}
-                        <tr>
-                            <td>{{ v.nom }}</td>
-                            <td>{{ v.cp }}</td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-auto">
-                                        <a type="button" class="btn btn-warning btn-sm"
-                                        href="{{ path('gestion_villes', {'id':v.id}) }}">Modifier</a>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="btn btn-danger btn-sm" onclick="del('{{ path('gestion_villes_delete', {'id': v.id}) }}')">Supprimer</div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+        </form>
+        <hr>
+        {% if ville.id %}
+            <h3>Modifier une ville</h3>
+        {% else %}
+            <h3>Ajouter une ville</h3>
+        {% endif %}
+        {{ form_start(villeView) }}
+        {{ form_errors(villeView) }}
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <div class="input-group">
+                    {{ form_label(villeView.nom) }}
+                    {{ form_widget(villeView.nom) }}
+                    {{ form_errors(villeView.nom) }}
+                </div>
+            </div>
+            {#
+                Si on modifie (modify = true), alors on n'affiche pas le formulaire CP
+                Si on ne modifie pas, on ajoute. (modify = false) On affiche alors le formulaire.
+            #}
+            {#{% if not modify %}#}
+            <div class="col-auto">
+                <div class="input-group">
+                    {{ form_label(villeView.cp) }}
+                    {{ form_widget(villeView.cp) }}
+                    {{ form_errors(villeView.cp) }}
+                </div>
+            </div>
+            {#{% endif %}#}
+            <div class="col-auto">
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary md-3">Valider</button>
+                    </div>
+                    {% if ville.id %}
+                    <div class="col">
+                        <a type="button" class="btn btn-danger md-3"
+                           href="{{ path('gestion_villes')}}">Annuler</a>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    {% endif %}
+        <div>
+            {#        Messages d'erreur / Succès #}
+            {% for categorie, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash flash-{{ categorie }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {{ form_end(villeView) }}
+        <hr>
+        {# Tableau #}
+        <div id="table"
+             class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar table-hover table-responsive container-fluid">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Ville</th>
+                    <th scope="col">Code postal</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for v in villes %}
+                    <tr>
+                        <td>{{ v.nom }}</td>
+                        <td>{{ v.cp }}</td>
+                        <td>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <a type="button" class="btn btn-warning btn-sm"
+                                       href="{{ path('gestion_villes', {'id':v.id}) }}">Modifier</a>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="btn btn-danger btn-sm" onclick="del('{{ path('gestion_villes_delete', {'id': v.id}) }}')">Supprimer</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

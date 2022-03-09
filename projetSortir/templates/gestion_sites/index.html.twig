@@ -8,73 +8,121 @@
 {% block title %}Gestion sites{% endblock %}
 
 {% block body %}
-    {% if app.user and app.user.actif %}
-        <div class="container-fluid">
-            <h2>Gestion des sites</h2>
-            <hr>
-            <h3>Filtrer les sites</h3>
-            {# Formulaire pour le filtre #}
-            <form class="row align-items-center" method="get" action="{{ path('gestion_sites') }}">
-                {# Recherche "Nom du site" #}
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <div class="input-group">
-                            <label for="nomSite" class="col-form-label input-group-text">🔍</label>
-                            <input id="nomSite" name="nomSite" type="text" class="form-control">
-                        </div>
-                    </div>
-                    {# Bouton "Rechercher" #}
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">Rechercher</button>
-                    </div>
-                </div>
-            </form>
-            <hr>
-            <h3>Ajouter un site</h3>
-            {# Formulaire pour ajouter une ville #}
-            <form class="row align-items-center" method="post" action="{{ path('gestion_villes') }}">
+    <div class="container-fluid">
+        <h2>Gestion des sites</h2>
+        <hr>
+        <h3>Filtrer les sites</h3>
+        {# Formulaire pour le filtre #}
+        <form class="row align-items-center" method="get" action="{{ path('gestion_sites') }}">
+            {# Recherche "Nom du site" #}
+            <div class="row align-items-center">
                 <div class="col-auto">
                     <div class="input-group">
-                        <label for="nomSite" class="col-form-label input-group-text">Nom</label>
-                        <input id="nomSite" name="nomSite" type="text" class="form-control">
+                        <label for="site" class="col-form-label input-group-text">🔍</label>
+                        <input id="site" name="site" type="text" class="form-control">
                     </div>
                 </div>
-                {# Bouton "Ajouter une ville" #}
+                {# Selecteur de ville #}
                 <div class="col-auto">
-                    <div class="col text-left">
-                        <a href="{{ path('app_main')}}"><input type="button" value="Ajouter un site" class="btn btn-primary md-3"/></a>
+                    <div class="input-group">
+                        <label for="ville" class="col-form-label input-group-text">Ville</label>
+                        <select id ="ville" name="ville" class="form-select">
+                            <option value="0" selected>Toute les villes</option>
+                            {% for ville in villes %}
+                            <option value="{{ ville.id }}">{{ ville.nom }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
-            </form>
-            <hr>
-            <div id="table" class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar table-hover table-responsive container-fluid">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">Sites</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for s in sites %}
-                        <tr>
-                            <td>{{ s.nom }}</td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-auto">
-                                        <a href="{{ path('app_main')}}">Modifier</a>
-                                    </div>
-                                    -
-                                    <div class="col-auto">
-                                        <a href="{{ path('app_main')}}">Supprimer</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                {# Bouton "Rechercher" #}
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        {% if site.id %}
+            <h3>Modifier un site</h3>
+        {% else %}
+            <h3>Ajouter un site</h3>
+        {% endif %}
+        {{ form_start(siteView) }}
+        {{ form_errors(siteView) }}
+        {# Formulaire pour ajouter une ville #}
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <div class="input-group">
+                    {{ form_label(siteView.nom) }}
+                    {{ form_widget(siteView.nom) }}
+                    {{ form_errors(siteView.nom) }}
+                </div>
+            </div>
+            {# Bouton "Ajouter une ville" #}
+            <div class="col-auto">
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary md-3">Valider</button>
+                    </div>
+                    {% if site.id %}
+                    <div class="col">
+                        <a type="button" class="btn btn-danger md-3"
+                           href="{{ path('gestion_sites')}}">Annuler</a>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    {% endif %}
+        <div>
+            {#        Messages d'erreur / Succès #}
+            {% for categorie, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash flash-{{ categorie }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {{ form_end(siteView) }}
+        <hr>
+        {# Tableau #}
+        <div id="table" class="row align-items-center table-wrapper-scroll-y my-custom-scrollbar table-hover table-responsive container-fluid">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Site</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for s in sites %}
+                    <tr>
+                        <td>{{ s.nom }}</td>
+                        <td>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <a type="button" class="btn btn-warning btn-sm"
+                                       href="{{ path('gestion_sites', {'id':s.id}) }}">Modifier</a>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="btn btn-danger btn-sm" onclick="del('{{ path('gestion_sites_delete', {'id': s.id}) }}')">Supprimer</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function del(route) {
+            const oReq = new XMLHttpRequest();
+            oReq.onload = setTimeout(document.location.reload(true), 1000);
+            oReq.open("delete", route, true);
+            oReq.send();
+        }
+    </script>
 {% endblock %}

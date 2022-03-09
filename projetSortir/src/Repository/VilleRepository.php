@@ -60,16 +60,13 @@ class VilleRepository extends ServiceEntityRepository
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects filtered by what user ask
     //  */
-    public function findFilteredVilles(Request $request){
-        /* Paramètre de la requête */
-        $nomVille = $request->get("ville");
-
+    public function findFilteredVilles(string $search){
         /* Création de la requêtes */
         $res = $this->createQueryBuilder('ville');
 
-        if(!empty(trim($nomVille))) {
+        if(!empty(trim($search))) {
             $res->andWhere('ville.nom like :ville')
-                ->setParameter('ville', "%".$nomVille."%");
+                ->setParameter('ville', "%".$search."%");
         }
 
         return $res ->getQuery()

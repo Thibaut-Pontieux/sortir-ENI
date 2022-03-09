@@ -6,6 +6,7 @@ use App\Repository\SiteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SiteRepository::class)
@@ -21,6 +22,13 @@ class Site
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Assert\NotBlank(message="Veuillez renseigner une valeur")
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 30,
+     *      minMessage = "Un site doit avoir au moins {{ limit }} caractères.",
+     *      maxMessage = "Un site doit avoir moins de {{ limit }} caractères."
+     * )
      */
     private $nom;
 
@@ -30,7 +38,7 @@ class Site
     private $participants;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="site", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="site", cascade={"remove"}, orphanRemoval=true)
      */
     private $sorties;
 
