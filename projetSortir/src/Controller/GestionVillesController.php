@@ -24,19 +24,17 @@ class GestionVillesController extends AbstractController
     public function index(
         $id = null,
         EntityManagerInterface $entityManager,
-        VilleRepository $villeRepository, Request $request): Response
+        VilleRepository $villeRepository,
+        Request $request): Response
     {
-        /*
-         * Récupération des villes en base
-         */
-        $villes = $villeRepository->findFilteredVilles($request);
-
-        /*
-         * Récupération d'une ville en fonction de l'id placé en paramètre.
-         * Si id = null, alors aucune ville n'est récupérée.
-         */
-        $ville = $villeRepository->findOneBy(array('id' => $id));
-
+        $ville = null;
+        if ($id) {
+            /*
+             * Récupération d'une ville en fonction de l'id placé en paramètre.
+             * Si id = null, alors aucune ville n'est récupérée.
+             */
+            $ville = $villeRepository->find($id);
+        }
         /*
          * Si une ville est récupérée (n'est pas null), modify = true, sinon false.
          * Si modify = false, on créer une nouvelle ville
@@ -61,11 +59,28 @@ class GestionVillesController extends AbstractController
          */
         $villeForm->handleRequest($request);
         if ($villeForm->isSubmitted() && $villeForm->isValid()) {
-            $entityManager->persist($ville);
-            $entityManager->flush();
-
+            try {
+                $entityManager->persist($ville);
+                $entityManager->flush();
+            } catch (OptimisticLockException $e) {
+                $this->addFlash("error", "Une erreur est survenue. $e");
+            } finally {
+                $nom = $ville->getNom();
+                $cp = $ville->getCp();
+                $this->addFlash("success", "Ville \"$nom\" ($cp) ajoutée.");
+            }
             return $this->redirectToRoute('gestion_villes');
         }
+
+        /*
+         * Récupération de la valeur du champ de saisie du filtre
+         */
+        $filtre = $request->get('ville') ?? '';
+
+        /*
+         * Récupération des villes en base
+         */
+        $villes = $villeRepository->findFilteredVilles($filtre);
 
         return $this->render('gestion_villes/index.html.twig', [
             'villes' => $villes,
@@ -76,52 +91,22 @@ class GestionVillesController extends AbstractController
     }
 
     /**
-     * @Route("/gestion/villes/add", name="gestion_villes_add")
-     * @throws ORMException
-     */
-    public function add(Request $request, VilleRepository $villeRepository): Response
-    {
-        $ville = new ville();
-        $nomVille = $request->get("nomVille");
-        $cp = $request->get("cpVille");
-
-        if (empty($nomVille) or empty($cp)) {
-            if (empty(trim($nomVille))) {
-                $this->addFlash("error", "Le nom ne peut pas être vide.");
-            }
-            if (empty(trim($cp))) {
-                $this->addFlash("error", "Le code postal ne peut pas être vide.");
-            }
-        } else {
-            $ville->setNom($nomVille)
-                ->setCp($cp);
-            try {
-                $villeRepository->add($ville);
-            } catch (OptimisticLockException $e) {
-                $this->addFlash("error", "Une erreur est survenue. $e");
-            } finally {
-                $this->addFlash("success", "Nouvelle ville ajoutée.");
-            }
-
-        }
-        return $this->redirectToRoute('gestion_villes', []);
-    }
-
-    /**
      * @Route("/gestion/villes/{id}/delete", name="gestion_villes_delete", methods={"DELETE"}, requirements={"id": "\d+"})
      * @throws ORMException
      */
     public function delete(Ville $ville, EntityManagerInterface $entityManager): Response
     {
-        $nomVille = $ville->getNom();
         try {
             $entityManager->remove($ville);
             $entityManager->flush();
             $entityManager->detach($ville);
         } catch (OptimisticLockException $e) {
             $this->addFlash("error", "Une erreur est survenue. $e");
+        } finally {
+            $nom = $ville->getNom();
+            $cp = $ville->getCp();
+            $this->addFlash("success", "Ville \"$nom\" ($cp) supprimée.");
         }
-        $this->addFlash("success", "Ville \"$nomVille\" supprimée.");
 
         return $this->redirectToRoute('gestion_villes');
     }
