@@ -91,9 +91,6 @@ class RegistrationController extends AbstractController
                     }
                     fclose($handle);
                 }
-
-                //dump($utilisateurs);
-
                 foreach ($utilisateurs as $u) {
                     //-- data = tous les champs d'un utilisateur
                     $data = explode(";", $u);
