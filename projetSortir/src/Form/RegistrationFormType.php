@@ -17,11 +17,21 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('pseudo')
+            ->add('pseudo', null,
+                [
+                    'label'=>'Pseudo',
+                    'label_attr' => ['class' => 'col-form-label input-group-text'],
+                    'attr' => ['class' => 'form-control']
+                ])
             ->add('plainPassword', PasswordType::class, [
+                'label'=>'Mot de Passe',
+                'label_attr' => ['class' => 'col-form-label input-group-text'],
                 // On encode le MDP dans le controller
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
+                'attr' => [
+                    'class' => 'form-control',
+                    'autocomplete' => 'new-password'
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez saisir un mot de passe',
@@ -34,11 +44,38 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('nom')
-            ->add('prenom')
-            ->add('telephone')
-            ->add('mail')
-            ->add('site', EntityType::class, ['choice_label' => 'nom', 'class' => Site::class, 'label' => 'Site'])
+            ->add('nom', null,
+                [
+                    'label'=>'Nom',
+                    'label_attr' => ['class' => 'col-form-label input-group-text'],
+                    'attr' => ['class' => 'form-control']
+                ])
+            ->add('prenom', null,
+                [
+                    'label'=>'Prénom',
+                    'label_attr' => ['class' => 'col-form-label input-group-text'],
+                    'attr' => ['class' => 'form-control']
+                ])
+            ->add('telephone', null,
+                [
+                    'label'=>'Téléphone',
+                    'label_attr' => ['class' => 'col-form-label input-group-text'],
+                    'attr' => ['class' => 'form-control']
+                ])
+            ->add('mail', null,
+                [
+                    'label'=>'Mail',
+                    'label_attr' => ['class' => 'col-form-label input-group-text'],
+                    'attr' => ['class' => 'form-control']
+                ])
+            ->add('site', EntityType::class,
+                [
+                    'label' => 'Site',
+                    'label_attr' => ['class' => 'col-form-label input-group-text'],
+                    'attr' => ['class' => 'form-control'],
+                    'class' => Site::class, 'choice_label' => 'nom',
+                    'choice_attr' => ['class' => 'form-select'],
+                ])
         ;
     }
 

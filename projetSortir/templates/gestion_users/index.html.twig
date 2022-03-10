@@ -27,6 +27,7 @@
                             <th scope="col">Pseudo</th>
                             <th scope="col">Nom - Prénom</th>
                             <th scope="col">Rôles</th>
+                            <th scope="col">Admin</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -39,44 +40,71 @@
                                     {{ role | join(role) }}
                                 {% endfor %}
                             </td>
+                            <td>{% if u.administrateur %}Oui{% else %}Non{% endif %}</td>
                             <td>
                                 <div class="row">
-                                    {% if u.administrateur and u.pseudo != "Admin" %}
-                                        <div class="col-auto">
-                                            <a href="{{ path('app_main')}}">Add to user</a>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a href="{{ path('gestion_users_delete', {id : u.id})}}">Delete</a>
-                                        </div>
-                                        {% if u.actif %}
-                                        <div class="col-auto">
-                                            <a href="{{ path('gestion_users_desactiver', {id : u.id})}}">Desactiver</a>
-                                        </div>
-                                        {% else %}
-                                        <div class="col-auto">
-                                            <a href="{{ path('gestion_users_desactiver', {id : u.id})}}">Activer</a>
-                                        </div>
+                                    {#
+                                        Si l'utilisateur est admin avec pseudo admin :
+                                            Si utilisateur admin
+                                                - Ajout en utilisateur
+                                            Si utilisateur utilisateur
+                                                - Ajouter en admin
+
+                                        - Delete
+                                        - Désactiver
+
+                                    #}
+                                    {% dump(userConnected) %}
+                                    {#
+                                        Gestion de la case Actions de admin en fonction de qui est connecté
+                                    #}
+                                    {% if u.pseudo is same as('Admin') %}
+                                        {% if userConnected.userIdentifier is same as('Admin') %}
+                                            <div class="col-auto">
+                                                Bonjour Ô Grand Admin des admin.
+                                            </div>
                                         {% endif %}
-                                    {% elseif not u.administrateur %}
-                                        <div class="col-auto">
-                                            <a href="{{ path('app_main')}}">Add to admin</a>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a href="{{ path('gestion_users_delete', {id : u.id})}}">Delete</a>
-                                        </div>
-                                        {% if u.actif %}
-                                        <div class="col-auto">
-                                            <a href="{{ path('gestion_users_desactiver', {id : u.id})}}">Desactiver</a>
-                                        </div>
-                                        {% else %}
-                                        <div class="col-auto">
-                                            <a href="{{ path('gestion_users_desactiver', {id : u.id})}}">Activer</a>
-                                        </div>
+                                        {% if userConnected.userIdentifier is not same as('Admin') %}
+                                            <div class="col-auto">
+                                                On ne supprime pas l'admin des admins...
+                                            </div>
                                         {% endif %}
                                     {% else %}
+                                        {% if userConnected.userIdentifier is same as('Admin')   %}
+
+                                            <div class="col-auto">
+                                                <a type="button" class="btn btn-primary btn-sm"
+                                                   href="{{ path('gestion_users_changeAdmin', {id : u.id}) }}">
+                                                    {% if u.administrateur %}
+                                                        Add to user
+                                                    {% else %}
+                                                        Add to admin
+                                                    {% endif %}
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                        {% if u.actif %}
+                                            <div class="col-auto">
+                                                <a type="button" class="btn btn-warning btn-sm"
+                                                   href="{{ path('gestion_users_desactiver', {id : u.id})}}">Désactiver</a>
+                                            </div>
+                                        {% else %}
+                                            <div class="col-auto">
+                                                <a type="button" class="btn btn-warning btn-sm"
+                                                   href="{{ path('gestion_users_desactiver', {id : u.id})}}">Activer</a>
+                                            </div>
+                                        {% endif %}
                                         <div class="col-auto">
-                                            On ne supprime pas l'admin des admins...
+                                            <a type="button" class="btn btn-danger btn-sm"
+                                               href="{{ path('gestion_users_delete', {id : u.id})}}">Delete</a>
                                         </div>
+                                    {% endif %}
+
+
+
+                                    {% if u.administrateur and u.pseudo is not same as("Admin") and u.pseudo is not same as(userConnected.userIdentifier) %}
+
+
                                     {% endif %}
                                 </div>
                             </td>

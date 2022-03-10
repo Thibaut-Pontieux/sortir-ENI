@@ -7,29 +7,82 @@
         <div class="container">
             <h1 style="text-align: center">Inscription</h1>
             <hr>
-            <div class="row">
-                {{ form_start(registrationForm) }}
-                    {{ form_row(registrationForm.pseudo, {
-                        label: 'Pseudo',
-                    }) }}
-                    {{ form_row(registrationForm.plainPassword, {
-                        label: 'Mot de passe',
-                    }) }}
-                    {{ form_row(registrationForm.nom) }}
-                    {{ form_row(registrationForm.prenom) }}
-                    {{ form_row(registrationForm.telephone) }}
-                    {{ form_row(registrationForm.mail) }}
-                    {{ form_row(registrationForm.site) }}
-                    <div class="row">
-                        <div class="col text-center">
-                            <button class="btn btn-primary btn-lg" type="submit">Inscrire</button>
-                        </div>
-                        <div class="col text-center">
-                            <a href="{{ path('app_main') }}" class="btn btn-danger btn-lg" role="button">Retour</a>
-                        </div>
+            {% for categorie, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash flash-{{ categorie }}">
+                        {{ message }}
                     </div>
-                {{ form_end(registrationForm) }}
+                {% endfor %}
+                <hr>
+            {% endfor %}
+            {{ form_start(registrationForm) }}
+            <div class="row align-items-center mb-3">
+                <div class="col text-center mb-3">
+                    <div class="input-group">
+                        {{ form_label(registrationForm.pseudo) }}
+                        {{ form_widget(registrationForm.pseudo) }}
+                        {{ form_errors(registrationForm.pseudo) }}
+                    </div>
+                </div>
+                <div class="col text-center mb-3">
+                    <div class="input-group">
+                        {{ form_label(registrationForm.plainPassword) }}
+                        {{ form_widget(registrationForm.plainPassword) }}
+                        {{ form_errors(registrationForm.plainPassword) }}
+                    </div>
+                </div>
             </div>
+            <div class="row align-items-center mb-3">
+                <div class="col text-center mb-3">
+                    <div class="input-group">
+                        {{ form_label(registrationForm.nom) }}
+                        {{ form_widget(registrationForm.nom) }}
+                        {{ form_errors(registrationForm.nom) }}
+                    </div>
+                </div>
+                <div class="col text-center mb-3">
+                    <div class="input-group">
+                        {{ form_label(registrationForm.prenom) }}
+                        {{ form_widget(registrationForm.prenom) }}
+                        {{ form_errors(registrationForm.prenom) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center mb-3">
+                <div class="col text-center mb-3">
+                    <div class="input-group">
+                        {{ form_label(registrationForm.telephone) }}
+                        {{ form_widget(registrationForm.telephone) }}
+                        {{ form_errors(registrationForm.telephone) }}
+                    </div>
+                </div>
+                <div class="col text-center mb-3">
+                    <div class="input-group">
+                        {{ form_label(registrationForm.mail) }}
+                        {{ form_widget(registrationForm.mail) }}
+                        {{ form_errors(registrationForm.mail) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center mb-3">
+                <div class="col-6 text-center mb-3">
+                    <div class="input-group">
+                        {{ form_label(registrationForm.site) }}
+                        {{ form_widget(registrationForm.site) }}
+                        {{ form_errors(registrationForm.site) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center mb-3">
+                <div class="col text-center">
+                    <button class="btn btn-primary btn-lg" type="submit">Inscrire</button>
+                </div>
+                <div class="col text-center">
+                    <a href="{{ path('app_main') }}" class="btn btn-danger btn-lg" role="button">Retour</a>
+                </div>
+            </div>
+            {{ form_end(registrationForm) }}
+
             <hr>
             <div class="col text-center">
                 <a href="{{ path('register_csv')}}"><input type="button" value="Bouton magique des admins fainéants" class="btn btn-secondary md-3"/></a>
