@@ -31,7 +31,7 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // On encode le mot de passe
             $user->setMdp(
-            $userPasswordHasher->hashPassword(
+                $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
@@ -41,7 +41,9 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('login');
+            $this->addFlash("success","Utilisateur ajouté");
+            unset($form);
+            return $this->redirectToRoute('register');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -89,9 +91,6 @@ class RegistrationController extends AbstractController
                     }
                     fclose($handle);
                 }
-
-                //dump($utilisateurs);
-
                 foreach ($utilisateurs as $u) {
                     //-- data = tous les champs d'un utilisateur
                     $data = explode(";", $u);

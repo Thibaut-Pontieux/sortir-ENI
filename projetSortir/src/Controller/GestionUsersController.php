@@ -15,10 +15,12 @@ class GestionUsersController extends AbstractController
      */
     public function index(ParticipantRepository $participantRepository): Response
     {
+        $user = $this->getUser();
         $users = $participantRepository->findAll();
         return $this->render('gestion_users/index.html.twig', [
             'controller_name' => 'GestionUsersController',
-            'users' => $users
+            'users' => $users,
+            'userConnected' => $user
         ]);
     }
 
@@ -56,5 +58,28 @@ class GestionUsersController extends AbstractController
         }
         
         return $this->redirectToRoute('gestion_users'); 
+    }
+
+    /**
+     * @Route("/gestion/users/changeAdmin/{id}", name="gestion_users_changeAdmin")
+     */
+    public function changeAdmin(int $id, ParticipantRepository $participantRepository, EntityManagerInterface $em): Response
+    {
+        $user = $participantRepository->find($id);
+        if ($user){
+            if($user->getAdministrateur()){
+                $user->setAdministrateur(false);
+                $user->setRoles(['ROLE_USER']);
+            }else{
+                $user->setAdministrateur(true);
+                $user->setRoles(['ROLE_ADMIN']);
+            }
+            $em->flush();
+
+            $this->addFlash("success", sprintf("Utilisateur promu au rand de %s", $user->getAdministrateur() ? "admin" : "utilisateur"));
+        } else {
+            $this->addFlash("error", "Erreur lors de la promotion d'un utilisateur");
+        }
+        return $this->redirectToRoute('gestion_users');
     }
 }

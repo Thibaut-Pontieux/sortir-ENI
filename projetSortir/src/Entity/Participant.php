@@ -198,7 +198,9 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // Tous les participants ont au moins le rôle ROLE_USER
-        $roles[] = 'ROLE_USER';
+        if(empty($roles)){
+            $roles = ['ROLE_USER'];
+        }
 
         return array_unique($roles);
     }

@@ -51,9 +51,6 @@ class SortieController extends AbstractController
         if (empty($utilisateur)){
             return $this->redirectToRoute('login');  
         }
-
-        //dump($utilisateur);
-
         //-- gestion POST
         if ($request->isMethod('POST')) {
             
@@ -192,9 +189,6 @@ class SortieController extends AbstractController
         $sortie = $sortieRepo->find($id);
 
         if (!empty($sortie)){
-
-            dump($sortie->getParticipant()->getRoles());
-
             //-- si la sortie n'est pas commencée et que je suis l'organisateur, je peux l'annuler
             if ($sortie->getDateDebut() > new DateTime()){
                 if ($sortie->getParticipant() == $this->getUser() || in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){

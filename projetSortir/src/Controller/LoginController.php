@@ -57,8 +57,6 @@ class LoginController extends AbstractController
             $pseudo = $request->request->get('reset_pseudo');
             $password1 = $request->request->get('reset_p1');
             $password2 = $request->request->get('reset_p2');
-
-            //dump($mail,$pseudo,$password1,$password2);
                  
             //-- on vérifie que l'utilisateur existe
             if ($userRepo->findOneBy(array('mail' => $mail, 'pseudo' => $pseudo )) != null){
