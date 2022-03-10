@@ -8,7 +8,11 @@
     {% if app.user and app.user.actif %}
         <div class="row">
             <div class="col-sm-12 col-md-4 image-container">
-                <img src="../../public/images/avatar.svg" class="rounded float-start" alt="Default user picture">
+            {% if participant.urlPhoto %}
+                 <img src="../../public/images/{{ participant.urlPhoto}}" class="rounded float-start w-50" alt="User picture">
+            {% else %}
+                <img src="../../public/images/avatar.svg" class="rounded float-start" alt="Default user picture"> 
+            {% endif %}
             </div>
             <div class="col-sm-12 col-md-4">
                 <h1 style="text-align: center">{{ participant.pseudo }}</h1>
