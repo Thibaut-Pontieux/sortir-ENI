@@ -51,6 +51,11 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private $mail;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $urlPhoto;
+
+    /**
      * @ORM\Column(type="string")
      */
     private $mdp;
@@ -151,6 +156,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     public function setMail(string $mail): self
     {
         $this->mail = $mail;
+
+        return $this;
+    }
+
+    public function getUrlPhoto(): ?string
+    {
+        return $this->urlPhoto;
+    }
+
+    public function setUrlPhoto(?string $urlPhoto): self
+    {
+        $this->urlPhoto = $urlPhoto;
 
         return $this;
     }

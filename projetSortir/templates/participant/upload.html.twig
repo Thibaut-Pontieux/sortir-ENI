@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block mainTitle %}Télécharger une photo de profil{% endblock %}
+
+{% block body %}
+    {% if app.user and app.user.actif %}
+        <div class="container">   
+
+            {% for categorie, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash flash-{{ categorie }}">
+                        {{ message }}
+                    </div>    
+                {% endfor %}
+            {% endfor %}
+
+            {{ form_start(form) }}
+            {{ form_row(form.attachment) }}
+            <button type="submit" class="btn btn-primary">Enregistrer</button>    
+            {{ form_end(form) }}
+        </div>
+    {% endif %}
+{% endblock %}
