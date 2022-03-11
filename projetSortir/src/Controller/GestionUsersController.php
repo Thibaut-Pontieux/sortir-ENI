@@ -76,7 +76,7 @@ class GestionUsersController extends AbstractController
             }
             $em->flush();
 
-            $this->addFlash("success", sprintf("Utilisateur promu au rand de %s", $user->getAdministrateur() ? "admin" : "utilisateur"));
+            $this->addFlash("success", sprintf("Utilisateur %s promu au rang de %s", $user->getPseudo(), $user->getAdministrateur() ? "admin" : "utilisateur"));
         } else {
             $this->addFlash("error", "Erreur lors de la promotion d'un utilisateur");
         }
