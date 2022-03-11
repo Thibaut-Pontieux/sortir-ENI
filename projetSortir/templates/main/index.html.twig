@@ -155,19 +155,25 @@
                             <td>
                                 {# Cas 1 : Si on est "consulteur" ou "créateur" #}
                                 {% if user == s.participant %}
-                                    <a href="{{ path('sortie_modify', {'id':s.id }) }}">Modifier</a>
+                                    <a type="button" class="btn btn-warning btn-sm"
+                                       href="{{ path('sortie_modify', {'id':s.id }) }}">Modifier</a>
                                     {% if s.etat.libelle == 'Créée' %}
-                                        <a href="{{ path('sortie_publish', {'id': s.id }) }}">Publier</a>
+                                        <a type="button" class="btn btn-primary btn-sm"
+                                           href="{{ path('sortie_publish', {'id': s.id }) }}">Publier</a>
                                     {% endif %}
                                     {% if s.etat.libelle != 'Annulée' %}
-                                        <a href="{{ path('sortie_cancel', {'id':s.id }) }}">Annuler</a>
+                                        <a type="button" class="btn btn-danger btn-sm"
+                                           href="{{ path('sortie_cancel', {'id':s.id }) }}">Annuler</a>
                                     {% endif %}
                                 {% else %}
-                                    <a href="{{ path('sortie', {'id':s.id }) }}">Afficher</a>
+                                    <a type="button" class="btn btn-info btn-sm"
+                                       href="{{ path('sortie', {'id':s.id }) }}">Afficher</a>
                                     {% if inscrit %}
-                                        <a href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
+                                        <a type="button" class="btn btn-warning btn-sm"
+                                           href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
                                     {% else %}
-                                        <a href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
+                                        <a type="button" class="btn btn-success btn-sm"
+                                           href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
                                     {% endif %}
                                 {% endif %}
                             </td>
