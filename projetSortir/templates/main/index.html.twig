@@ -154,6 +154,8 @@
                             <td><a href="{{  path('participant', { 'pseudo': s.participant.pseudo }) }}">{{ s.participant.pseudo }}</a></td>
                             <td>
                                 {# Cas 1 : Si on est "consulteur" ou "créateur" #}
+                                <a type="button" class="btn btn-info btn-sm"
+                                       href="{{ path('sortie', {'id':s.id }) }}">Afficher</a>
                                 {% if user == s.participant %}
                                     <a type="button" class="btn btn-warning btn-sm"
                                        href="{{ path('sortie_modify', {'id':s.id }) }}">Modifier</a>
@@ -161,19 +163,19 @@
                                         <a type="button" class="btn btn-primary btn-sm"
                                            href="{{ path('sortie_publish', {'id': s.id }) }}">Publier</a>
                                     {% endif %}
-                                    {% if s.etat.libelle != 'Annulée' %}
+                                    {% if s.etat.libelle != 'Annulée' and s.etat.libelle != 'Passée' %}
                                         <a type="button" class="btn btn-danger btn-sm"
                                            href="{{ path('sortie_cancel', {'id':s.id }) }}">Annuler</a>
                                     {% endif %}
                                 {% else %}
-                                    <a type="button" class="btn btn-info btn-sm"
-                                       href="{{ path('sortie', {'id':s.id }) }}">Afficher</a>
-                                    {% if inscrit %}
-                                        <a type="button" class="btn btn-warning btn-sm"
-                                           href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
-                                    {% else %}
-                                        <a type="button" class="btn btn-success btn-sm"
-                                           href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
+                                    {% if s.etat.libelle == 'Publiée' %}
+                                        {% if inscrit %}
+                                            <a type="button" class="btn btn-warning btn-sm"
+                                            href="{{ path('remove_participation', {'idSortie':s.id }) }}">Se désister</a>
+                                        {% else %}
+                                            <a type="button" class="btn btn-success btn-sm"
+                                            href="{{ path('add_participation', {'idSortie':s.id }) }}">S'inscrire</a>
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
                             </td>
