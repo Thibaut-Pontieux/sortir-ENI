@@ -71,61 +71,71 @@ class RegistrationController extends AbstractController
 
             //-- si form soumis et valid
             if ($form->isValid() && $form->isSubmitted()) {
-            
-                //-- je récupère mon fichier CSV
-                $file = $form->get('submitFile')->getData();
 
-                //-- je l'ouvre
-                if (($handle = fopen($file->getPathname(), "r")) !== false) {
+                //-- je récupère mon fichier
+                $file = $form->get('submitFile')->getData();
+             
+                //-- si cest un csv
+                if ($file->getClientOriginalExtension() == 'csv'){
                 
-                    //-- je saute la première ligne si le fichier contient un en-tête
-                    $head = true;
-                    //-- je lis et je traite chaque ligne
-                    while (($data = fgetcsv($handle)) !== false) {
-                        if ($head){
-                            $head = false;
-                        } else {
-                            //-- j'ajouter l'utilisateur à mon tableau d'utilisateurs
-                            $utilisateurs[] = $data[0];
+                    //-- je l'ouvre
+                    if (($handle = fopen($file->getPathname(), "r")) !== false) {
+                    
+                        //-- je saute la première ligne si le fichier contient un en-tête
+                        $head = true;
+                        //-- je lis et je traite chaque ligne
+                        while (($data = fgetcsv($handle)) !== false) {
+                            if ($head){
+                                $head = false;
+                            } else {
+                                //-- j'ajouter l'utilisateur à mon tableau d'utilisateurs
+                                $utilisateurs[] = $data[0];
+                            }
+                        }
+                        fclose($handle);
+                    }
+                    
+                    foreach ($utilisateurs as $u) {
+                        //-- data = tous les champs d'un utilisateur
+                        $data = explode(";", $u);
+
+                        try{
+                            //-- je véridie que l'utilisateur n'existe pas
+                            if (!$userRepo->findOneBy(array('pseudo' => $data[1]))){
+
+                            //-- je crée un utilisateur avec les données récupérées du CSV
+                            $utilisateur = new Participant();
+                            $utilisateur->setSite($siteRepo->find((int) $data[0]));
+                            $utilisateur->setPseudo($data[1]);
+                            $utilisateur->setNom($data[2]);
+                            $utilisateur->setPrenom($data[3]);
+                            $utilisateur->setTelephone($data[4]);
+                            $utilisateur->setMail($data[5]);
+                            $utilisateur->setMdp(
+                                $userPasswordHasher->hashPassword(
+                                        $utilisateur,
+                                        $data[6]
+                                    )
+                                );
+                            $utilisateur->setAdministrateur($data[7]);
+                            $utilisateur->setActif($data[8]);
+
+                            //-- envoi en BDD
+                            $em->persist($utilisateur);
+                            $em->flush();
+
+                            $this->addFlash("success","Ajout effectué avec succès");
+
+                            }
+                        } catch(\Exception $e){
+                            $this->addFlash("Error","Erreur dans l'ajout des utilisateurs veuillez vérifier la conformité  des données du fichier");
                         }
                     }
-                    fclose($handle);
+                } else {
+                    $this->addFlash("error","Le fichier doit être au format CSV");
                 }
-                foreach ($utilisateurs as $u) {
-                    //-- data = tous les champs d'un utilisateur
-                    $data = explode(";", $u);
-
-                    //-- je véridie que l'utilisateur n'existe pas
-                    if (!$userRepo->findOneBy(array('pseudo' => $data[1]))){
-
-                        //-- je crrée un utilisateur avec les données récupérées du CSV
-                        $utilisateur = new Participant();
-                        $utilisateur->setSite($siteRepo->find((int) $data[0]));
-                        $utilisateur->setPseudo($data[1]);
-                        $utilisateur->setNom($data[2]);
-                        $utilisateur->setPrenom($data[3]);
-                        $utilisateur->setTelephone($data[4]);
-                        $utilisateur->setMail($data[5]);
-                        $utilisateur->setMdp(
-                            $userPasswordHasher->hashPassword(
-                                    $utilisateur,
-                                    $data[6]
-                                )
-                            );
-                        $utilisateur->setAdministrateur($data[7]);
-                        $utilisateur->setActif($data[8]);
-
-                        //-- envoi en BDD
-                        $em->persist($utilisateur);
-                        $em->flush();
-                   }
-                    
-                }
-
             }
-
         }
-
         return $this->render('registration/csv.html.twig', [
             'form' => $form->createView(),
         ]);

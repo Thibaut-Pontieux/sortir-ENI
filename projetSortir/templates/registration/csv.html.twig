@@ -4,7 +4,17 @@
 
 {% block body %}
     {% if app.user and app.user.actif %}
-        <div class="container">   
+        <div class="container">
+
+            {% for categorie, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash flash-{{ categorie }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                <hr>
+            {% endfor %}
+
             {{ form_start(form) }}
             {{ form_row(form.submitFile) }}
             <button type="submit" class="btn btn-primary">Inscrire</button>    

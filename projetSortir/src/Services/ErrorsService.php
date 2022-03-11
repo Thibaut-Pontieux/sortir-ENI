@@ -32,6 +32,10 @@ class ErrorsService{
             $errors[] = "Date limite d'inscription incorrecte";
         }
 
+        if ($obj["date-cloture"] > $obj["date-debut"]){
+            $errors[] = "La date de cloture doit être inférieure à la date de début";
+        }
+
         if ($obj["nb-places"] == "" || (int) $obj["nb-places"] <= 0){
             $errors[] = "Nombre de places incorrect";
         }
