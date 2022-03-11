@@ -44,18 +44,6 @@
                             <td>
                                 <div class="row">
                                     {#
-                                        Si l'utilisateur est admin avec pseudo admin :
-                                            Si utilisateur admin
-                                                - Ajout en utilisateur
-                                            Si utilisateur utilisateur
-                                                - Ajouter en admin
-
-                                        - Delete
-                                        - Désactiver
-
-                                    #}
-                                    {% dump(userConnected) %}
-                                    {#
                                         Gestion de la case Actions de admin en fonction de qui est connecté
                                     #}
                                     {% if u.pseudo is same as('Admin') %}
@@ -73,14 +61,17 @@
                                         {% if userConnected.userIdentifier is same as('Admin')   %}
 
                                             <div class="col-auto">
-                                                <a type="button" class="btn btn-primary btn-sm"
-                                                   href="{{ path('gestion_users_changeAdmin', {id : u.id}) }}">
-                                                    {% if u.administrateur %}
+                                                {% if u.administrateur %}
+                                                    <a type="button" class="btn btn-secondary btn-sm"
+                                                       href="{{ path('gestion_users_changeAdmin', {id : u.id}) }}">
                                                         Add to user
+                                                    </a>
                                                     {% else %}
+                                                        <a type="button" class="btn btn-primary btn-sm"
+                                                           href="{{ path('gestion_users_changeAdmin', {id : u.id}) }}">
                                                         Add to admin
+                                                        </a>
                                                     {% endif %}
-                                                </a>
                                             </div>
                                         {% endif %}
                                         {% if u.actif %}
@@ -98,13 +89,6 @@
                                             <a type="button" class="btn btn-danger btn-sm"
                                                href="{{ path('gestion_users_delete', {id : u.id})}}">Delete</a>
                                         </div>
-                                    {% endif %}
-
-
-
-                                    {% if u.administrateur and u.pseudo is not same as("Admin") and u.pseudo is not same as(userConnected.userIdentifier) %}
-
-
                                     {% endif %}
                                 </div>
                             </td>
