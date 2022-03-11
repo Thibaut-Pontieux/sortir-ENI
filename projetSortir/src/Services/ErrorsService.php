@@ -34,7 +34,7 @@ class ErrorsService{
         }
 
         if (new DateTime($obj["date-debut"]) < new DateTime()){
-            $errors[] = "Seul Marty et Doc peuvent voyager de le passé";
+            $errors[] = "Seul Marty et Doc peuvent voyager dans le passé";
         }
 
         if ($obj["date-cloture"] > $obj["date-debut"]){
