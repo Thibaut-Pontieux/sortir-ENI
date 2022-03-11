@@ -1,23 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block mainTitle %}Inscription avec un fichier CSV!{% endblock %}
+{% block mainTitle %}Télécharger une photo de profil{% endblock %}
 
 {% block body %}
     {% if app.user and app.user.actif %}
-        <div class="container">
+        <div class="container">   
 
             {% for categorie, messages in app.flashes %}
                 {% for message in messages %}
                     <div class="flash flash-{{ categorie }}">
                         {{ message }}
-                    </div>
+                    </div>    
                 {% endfor %}
-                <hr>
             {% endfor %}
 
             {{ form_start(form) }}
-            {{ form_row(form.submitFile) }}
-            <button type="submit" class="btn btn-primary">Inscrire</button>    
+            {{ form_row(form.attachment) }}
+            <button type="submit" class="btn btn-primary">Enregistrer</button>    
             {{ form_end(form) }}
         </div>
     {% endif %}

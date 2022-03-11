@@ -50,11 +50,6 @@ class Sortie
     private $descriptionInfos;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $urlPhoto;
-
-    /**
      * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="sortie", orphanRemoval=true)
      */
     private $inscriptions;
@@ -161,18 +156,6 @@ class Sortie
     public function setDescriptionInfos(?string $descriptionInfos): self
     {
         $this->descriptionInfos = $descriptionInfos;
-
-        return $this;
-    }
-
-    public function getUrlPhoto(): ?string
-    {
-        return $this->urlPhoto;
-    }
-
-    public function setUrlPhoto(?string $urlPhoto): self
-    {
-        $this->urlPhoto = $urlPhoto;
 
         return $this;
     }
