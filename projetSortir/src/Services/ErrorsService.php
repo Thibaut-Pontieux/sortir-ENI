@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repository\LieuRepository;
 use App\Repository\VilleRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ErrorsService{
@@ -30,6 +31,10 @@ class ErrorsService{
 
         if ($obj["date-cloture"] == ""){
             $errors[] = "Date limite d'inscription incorrecte";
+        }
+
+        if (new DateTime($obj["date-debut"]) < new DateTime()){
+            $errors[] = "Seul Marty et Doc peuvent voyager de le passé";
         }
 
         if ($obj["date-cloture"] > $obj["date-debut"]){
