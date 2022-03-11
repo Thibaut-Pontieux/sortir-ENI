@@ -8,6 +8,14 @@
 
 {% block body %}
     {% if app.user and app.user.actif %}
+        {% if app.user != user %}
+        <div class="container">
+            <h1 style="text-align: center; color: red">Vous n'avez pas les droits pour accéder à cette page !</h1>
+            <div class="col text-center mt-4">
+                <a href="{{ path('app_main') }}" class="btn btn-danger btn-lg" role="button">Retour</a>
+            </div>
+        </div>
+        {% else %}
         <div class="container">
             <h1 style="text-align: center">Mon profil</h1>
             <hr>
@@ -19,6 +27,14 @@
                         </div>    
                     {% endfor %}
                 {% endfor %}
+                <div class="col-sm-12 col-md-4 image-container">
+                    {% if user.urlPhoto %}
+                        <img src="../../images/{{user.urlPhoto}}" class="rounded float-start w-75" alt="User picture">
+                    {% else %}
+                        <img src="../../images/avatar.svg" class="rounded float-start w-75" alt="Default user picture"> 
+                    {% endif %}
+                </div>
+                <div class="col-sm-12 col-md-8">
                 {{ form_start(profileForm) }}
                     {{ form_row(profileForm.pseudo) }}
                     <div class="mb-3">
@@ -34,7 +50,8 @@
                     {{ form_row(profileForm.telephone) }}
                     {{ form_row(profileForm.mail) }}
                     {{ form_row(profileForm.site) }}
-                    <div class="row">
+                    {{ form_row(profileForm.photo) }}
+                    <div class="row mb-4">
                         <div class="col text-center">
                             <button class="btn btn-primary btn-lg" type="submit">Enregistrer</button>
                         </div>
@@ -43,7 +60,9 @@
                         </div>
                     </div>
                 {{ form_end(profileForm) }}
+                </div>
             </div>
         </div>
+        {% endif %}
     {% endif %}
 {% endblock %}

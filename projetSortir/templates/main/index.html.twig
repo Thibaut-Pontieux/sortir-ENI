@@ -156,8 +156,12 @@
                                 {# Cas 1 : Si on est "consulteur" ou "créateur" #}
                                 {% if user == s.participant %}
                                     <a href="{{ path('sortie_modify', {'id':s.id }) }}">Modifier</a>
-                                    <a href="#">Publier</a>
-                                    <a href="{{ path('sortie_cancel', {'id':s.id }) }}">Annuler</a>
+                                    {% if s.etat.libelle == 'Créée' %}
+                                        <a href="{{ path('sortie_publish', {'id': s.id }) }}">Publier</a>
+                                    {% endif %}
+                                    {% if s.etat.libelle != 'Annulée' %}
+                                        <a href="{{ path('sortie_cancel', {'id':s.id }) }}">Annuler</a>
+                                    {% endif %}
                                 {% else %}
                                     <a href="{{ path('sortie', {'id':s.id }) }}">Afficher</a>
                                     {% if inscrit %}

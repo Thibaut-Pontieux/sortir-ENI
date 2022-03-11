@@ -12,7 +12,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
 
 
@@ -36,6 +35,8 @@ class ParticipantController extends AbstractController
     public function update(Request $request, EntityManagerInterface $em, ParticipantRepository $participantRepository, UserPasswordHasherInterface $userPasswordHasherInterface, string $pseudo): Response
     {
         $user = $participantRepository->findOneBy(array('pseudo' => $pseudo));
+        $extensions = ["gif", "jpg", "jpeg", "png"];
+
         $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
 
@@ -58,6 +59,39 @@ class ParticipantController extends AbstractController
                     return $this->redirectToRoute('updateParticipant', ['pseudo' => $user->getPseudo()]);
                 }
             }
+            //-- on récupère le fichier soumis via le form
+            $uploadedFile = $form->get('photo')->getData();
+            dump($uploadedFile);
+            //-- on vérifie qu'il s'agit d'une image
+            if (!empty($uploadedFile))
+            {
+                if(!in_array($uploadedFile->getClientOriginalExtension(), $extensions)){
+              
+                    $this->addFlash('error', "Le fichier demandé doit être une image");
+    
+                } else {
+                     //-- on récupère le dossier images dans public/images
+                    $destination = $this->getParameter('kernel.project_dir').'/public/images';  
+                    dump($destination);
+                    //-- on modifie le nom de l'image récupérée afin qu'elle soit unique en ajoutant pseudo-nomDuFichier au début du fichier
+                    $fileWithNewName = $user->getId()."-".$uploadedFile->getClientOriginalName();
+                
+                    
+                    //-- on la déplace dans le dossier images
+                    $uploadedFile->move($destination, $fileWithNewName);
+                    
+                    //-- si l'utilisateur avait déja une photo de profil
+                    if ($user->getUrlPhoto()){
+                        $filesystem = new Filesystem();
+                        //-- on supprime l'ancienne photo du dossier public
+                        $filesystem->remove($destination.'/'.$user->getUrlPhoto());
+                    }
+    
+                    //-- on sauvegarde le nom de la photo en bdd
+                    $user->setUrlPhoto($fileWithNewName);
+                }
+            }
+            
             $em->flush();
             $this->addFlash('success', "Le profil a été mis à jour");
             return $this->redirectToRoute('updateParticipant', ['pseudo' => $user->getPseudo()]);
@@ -65,6 +99,7 @@ class ParticipantController extends AbstractController
 
         return $this->render('participant/update.html.twig', [
             'profileForm' => $form->createView(),
+            'user' => $user,
         ]);
     }
 

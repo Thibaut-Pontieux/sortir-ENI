@@ -5,11 +5,10 @@ namespace App\Form;
 use App\Entity\Participant;
 use App\Entity\Site;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Email;
 
 class ProfileType extends AbstractType
 {
@@ -27,6 +26,7 @@ class ProfileType extends AbstractType
                 ]
             ])
             ->add('site', EntityType::class, ['choice_label' => 'nom', 'class' => Site::class, 'label' => 'Site'])
+            ->add('photo', FileType::class, array('label' => 'Photo à ajouter', 'mapped' => false, 'required' => false))
         ;
     }
 

@@ -207,7 +207,7 @@ class SortieController extends AbstractController
             
                 $this->addFlash("success", "Sortie annulée avec succès");
                 } else {
-                    $this->addFlash("error", "Vous n'êtes autoriser à annuler cette sortie");
+                    $this->addFlash("error", "Vous n'êtes pas autorisé à annuler cette sortie");
                 }
             } else {
                 // $this->addFlash("error", sprintf("Vous ne pouvez pas annuler cette sortie, celle ci est %s" , $sortie->getEtat()->getLibelle()));
@@ -216,6 +216,39 @@ class SortieController extends AbstractController
         } 
                 
         return $this->redirectToRoute('app_main');  
+    }
+
+    /**
+     * @Route("/sortie/publish/{id}", name="sortie_publish", methods={"GET"}, requirements={"id": "\d+"})
+     */
+    public function publish(EntityManagerInterface $em, SortieRepository $sortieRepo, EtatRepository $etatRepo, int $id): Response
+    {
+        $sortie = $sortieRepo->find($id);
+
+        if (!empty($sortie)) 
+        {
+            if ($sortie->getParticipant() == $this->getUser()) 
+            {
+
+                $etat = $etatRepo->findOneBy(array('libelle' => 'Publiée'));
+
+                // Si l'état n'existe pas alors on le créer
+                if (empty($etat))
+                {
+                    $etat = new Etat();
+                    $etat->setLibelle('Publiée');
+                    $em->persist($etat);
+                }
+
+                $sortie->setEtat($etat);
+                $em->flush();
+                $this->addFlash("success", "Sortie publiée avec succès");
+            } else {
+                $this->addFlash("error", "Vous n'êtes pas autorisé à annuler cette sortie");
+            }
+        }
+
+        return $this->redirectToRoute('app_main'); 
     }
 }
 

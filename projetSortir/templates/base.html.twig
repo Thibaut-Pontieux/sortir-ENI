@@ -22,7 +22,7 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <header>
             {# Nav #}
             {%  include "inc/nav.html.twig" %}
@@ -34,7 +34,7 @@
         {% block body %}{% endblock %}
 
         {# Footer #}
-        <footer class="footer py-3 bg-light fixed-bottom text-center">
+        <footer class="footer py-3 bg-light bottom mt-auto text-center">
             &copy; Sortir.com {{ date() | date("Y") }}
         </footer>
     </body>
