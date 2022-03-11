@@ -16,7 +16,7 @@
                         <li class="list-group-item"><span class="fw-bold">Etat : </span>{{ sortie.etat.libelle }}</li>
                         <li class="list-group-item"><span class="fw-bold">Date et heure de la sortie : </span>{{ sortie.dateDebut | date("d/m/Y") }}</li>
                         <li class="list-group-item"><span class="fw-bold">Date limite d'inscription : </span>{{ sortie.dateClotureInscription | date("d/m/Y") }}</li>
-                        <li class="list-group-item"><span class="fw-bold">Nombre de places : </span>{{ sortie.nbInscriptionsMax }}</li>
+                        <li class="list-group-item"><span class="fw-bold">Nombre de places : </span>{{ sortie.inscriptions|length }}/{{ sortie.nbInscriptionsMax }}</li>
                         <li class="list-group-item"><span class="fw-bold">Durée : </span>{{ sortie.duree }} minute(s)</li>
                         <li class="list-group-item"><span class="fw-bold">Ville : </span>{{ sortie.lieu.ville.nom }}</li>
                         <li class="list-group-item"><span class="fw-bold">Lieu : </span>{{ sortie.lieu.nom }}</li> 
