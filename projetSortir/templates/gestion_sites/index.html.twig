@@ -19,17 +19,19 @@
                 <div class="col-auto">
                     <div class="input-group">
                         <label for="site" class="col-form-label input-group-text">🔍</label>
-                        <input id="site" name="site" type="text" class="form-control">
+                        <input id="site" name="filtreSite" type="text" class="form-control" value="{{ filtreSite }}">
                     </div>
                 </div>
                 {# Selecteur de ville #}
                 <div class="col-auto">
                     <div class="input-group">
                         <label for="ville" class="col-form-label input-group-text">Ville</label>
-                        <select id ="ville" name="ville" class="form-select">
-                            <option value="0" selected>Toute les villes</option>
+                        <select id ="ville" name="filtreVille" class="form-select">
+                            <option value="0">Toute les villes</option>
                             {% for ville in villes %}
-                            <option value="{{ ville.id }}">{{ ville.nom }}</option>
+                            <option value="{{ ville.id }}" {% if(ville.id == filtreVille) %}selected{% endif %}>
+                                {{ ville.nom }}
+                            </option>
                             {% endfor %}
                         </select>
                     </div>
