@@ -27,6 +27,11 @@ class GestionVillesController extends AbstractController
         VilleRepository $villeRepository,
         Request $request): Response
     {
+        /*
+         * Récuperation de la session
+         */
+        $session = $request->getSession();
+
         $ville = null;
         if ($id) {
             /*
@@ -75,18 +80,24 @@ class GestionVillesController extends AbstractController
         /*
          * Récupération de la valeur du champ de saisie du filtre
          */
-        $filtre = $request->get('ville') ?? '';
+        $filtreNom = $request->get('ville') ?? '';
+
+        /*
+         * Sauvegarde en session
+         */
+        $session->set('filtreNom',$filtreNom);
 
         /*
          * Récupération des villes en base
          */
-        $villes = $villeRepository->findFilteredVilles($filtre);
+        $villes = $villeRepository->findFilteredVilles($filtreNom);
 
         return $this->render('gestion_villes/index.html.twig', [
             'villes' => $villes,
             'ville' => $ville,
             'modify' => $modify,
             'villeView' => $villeForm->createView(),
+            'filtreNom' => $session->get('filtreNom')
         ]);
     }
 

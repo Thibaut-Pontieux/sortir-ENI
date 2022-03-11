@@ -27,6 +27,11 @@ class GestionLieuxController extends AbstractController
         VilleRepository $villeRepository
     ): Response
     {
+        /*
+         * Récuperation de la session
+         */
+        $session = $request->getSession();
+
         $lieu = null;
         if($id){
             /*
@@ -76,18 +81,24 @@ class GestionLieuxController extends AbstractController
         /*
          * Récupération des valeurs du champ de saisie du filtre
          */
-        $idVille = $request->get('ville');
-        $filtreLieu = $request->get('lieu') ?? '';
+        $filtreVille = $request->get('filtreVille');
+        $filtreLieu = $request->get('filtreLieu') ?? '';
+
+        /*
+         * Sauvegarde en session
+         */
+        $session->set('filtreVille',$filtreVille);
+        $session->set('filtreLieu',$filtreLieu);
 
         /*
          * Affichage des lieu en fonction du filtre
          */
         //Si pas d'identifiant, ni de filtre ou alors qu'identifiant et filtre soient vide
-        if((empty($idVille) and empty($filtreLieu))){
+        if((empty($filtreVille) and empty($filtreLieu))){
             $lieux = $lieuRepository->findAll();
         }else{
             /* Paramètre de la requête */
-            $lieux = $lieuRepository->findFilteredLieux($filtreLieu, $idVille);
+            $lieux = $lieuRepository->findFilteredLieux($filtreLieu, $filtreVille);
         }
 
 
@@ -97,7 +108,9 @@ class GestionLieuxController extends AbstractController
             'lieux' => $lieux,
             'lieu' => $lieu,
             'modify' => $modify,
-            'lieuView'=> $lieuForm->createView()
+            'lieuView'=> $lieuForm->createView(),
+            'filtreVille' => $filtreVille,
+            'filtreLieu' => $filtreLieu
         ]);
     }
 
