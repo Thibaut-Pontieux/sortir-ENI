@@ -28,6 +28,11 @@ class GestionSitesController extends AbstractController
         SiteRepository $siteRepository,
         VilleRepository $villeRepository): Response
     {
+        /*
+         * Récuperation de la session
+         */
+        $session = $request->getSession();
+
         $site = null;
         if($id) {
             /*
@@ -79,19 +84,25 @@ class GestionSitesController extends AbstractController
         /*
          * Récupération des valeurs du champ de saisie du filtre
          */
-        $idVille = $request->get('ville');
-        $filterNomSite = $request->get('site');
+        $filtreVille = $request->get('filtreVille');
+        $filtreSite = $request->get('filtreSite');
+
+        /*
+         * Sauvegarde en session
+         */
+        $session->set('filtreSite',$filtreSite);
+        $session->set('filtreVille',$filtreVille);
 
         /*
          * Affichage des sites en fonction du filtre
          */
         $sites = null;
         //Si pas d'identifiant, ni de filtre ou alors qu'identifiant et filtre soient vide
-        if((empty($idVille) and empty($filterNomSite))){
+        if((empty($filtreVille) and empty($filtreSite))){
             $sites = $siteRepository->findAll();
         }else{
             /* Paramètre de la requête */
-            $sites = $siteRepository->findFilteredSites($filterNomSite, $idVille);
+            $sites = $siteRepository->findFilteredSites($filtreSite, $filtreVille);
         }
 
         return $this->render('gestion_sites/index.html.twig', [
@@ -100,6 +111,8 @@ class GestionSitesController extends AbstractController
             'villes' => $villes,
             'site' => $site,
             'siteView' => $siteForm->createView(),
+            'filtreSite' => $session->get('filtreSite'),
+            'filtreVille' =>$session->get('filtreVille')
         ]);
     }
 
